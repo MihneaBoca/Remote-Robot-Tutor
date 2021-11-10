@@ -8,7 +8,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 class NewTest(unittest.TestCase):
 
     def setUp(self):
-        print(os.path.dirname(os.path.abspath(__file__)) + '\chromedriver.exe')
         self.browser = webdriver.Chrome(executable_path=os.path.dirname(os.path.abspath(__file__)) + '\chromedriver.exe')
 
     def tearDown(self):
