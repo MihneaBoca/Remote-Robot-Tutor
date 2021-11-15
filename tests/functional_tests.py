@@ -28,6 +28,8 @@ class NewTest(unittest.TestCase):
 
         self.browser.find_element(By.NAME, 'submit_simulator')
 
+        self.browser.find_element(By.LINK_TEXT, 'Remote Robot Tutor')
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
