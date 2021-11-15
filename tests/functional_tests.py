@@ -24,6 +24,10 @@ class NewTest(unittest.TestCase):
 
         self.browser.find_element(By.NAME, 'submit_code')
 
+        WebDriverWait(self.browser, 5).until(lambda d: d.find_element(By.NAME, 'submit_simulator'))
+
+        self.browser.find_element(By.NAME, 'submit_simulator')
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
