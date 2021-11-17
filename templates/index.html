@@ -1,9 +1,14 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Index</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="{%  static  'codemirror/lib/codemirror.js' %}"></script>
+    <link href="{%  static  'codemirror/lib/codemirror.css' %}" rel="stylesheet" />
+    <script src="{%  static  'codemirror/mode/xml/xml.js' %}"></script>
+    <link href="{%  static  'codemirror/theme/material.css' %}" rel="stylesheet" />
 </head>
 <body>
     <nav class="mb-1 navbar navbar-expand-sm navbar-default" style="background-color: #325f5e;">
@@ -11,9 +16,28 @@
          <a class="navbar-brand"  href="#" style="font-family:courier; font-size: 25px; text-align: center"><strong>Remote Robot Tutor</strong></a>
         </div>
     </nav>
-    <div class="p-3">
-        <button class="btn btn-info" type="Submit" id="id_submit_code" name="submit_code">Run Code</button>
-        <button class="btn btn-info" type="Submit" id="id_submit_simulator" name="submit_simulator">Run Simulator</button>
+
+    <div class="container">
+        <div class="p-3">
+            <form action="" onsubmit="" method="POST">
+            {% csrf_token %}
+            <textarea id="terminal" name="terminal" placeholder="Enter Your Code..." >Enter Your Code...</textarea>
+            <script>
+                var editor = CodeMirror.fromTextArea(document.getElementById('terminal'), {
+                    lineNumbers: true,
+                    gutter: true,
+                    lineWrapping: true,
+                    theme: 'material',
+                    mode: 'xml',
+                });
+                editor.setSize(null, null);
+            </script>
+        </div>
+
+        <div class="p-3">
+            <button class="btn btn-info" type="Submit" id="id_submit_code" name="submit_code">Run Code</button>
+            <button class="btn btn-info" type="Submit" id="id_submit_simulator" name="submit_simulator">Run Simulator</button>
+        </div>
     </div>
 </body>
 </html>
