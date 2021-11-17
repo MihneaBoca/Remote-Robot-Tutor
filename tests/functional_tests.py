@@ -1,6 +1,9 @@
 import os
+import time
+
 from selenium import webdriver
 import unittest
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
@@ -29,6 +32,16 @@ class NewTest(unittest.TestCase):
         self.browser.find_element(By.NAME, 'submit_simulator')
 
         self.browser.find_element(By.LINK_TEXT, 'Remote Robot Tutor')
+
+        WebDriverWait(self.browser, 5).until(lambda d: d.find_element(By.ID, 'terminal'))
+
+        terminal = self.browser.find_element(By.ID, 'terminal')
+
+        self.assertEqual(terminal.get_attribute('placeholder'), 'Enter Your Code...')
+
+        code_mirror_element = self.browser.find_element(By.CSS_SELECTOR, ".CodeMirror")
+        self.browser.execute_script(
+            "arguments[0].CodeMirror.setValue(arguments[1]);", code_mirror_element, "Forward 10")
 
 
 if __name__ == '__main__':
