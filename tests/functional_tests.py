@@ -46,6 +46,14 @@ class NewTest(unittest.TestCase):
 
         self.browser.find_element(By.ID, 'mac_address')
 
+        select = Select(self.browser.find_element(By.ID, 'connection_type'))
+
+        select.select_by_visible_text('USB')
+
+        select.select_by_visible_text('Bluetooth')
+
+        select.select_by_visible_text('WIFI')
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
