@@ -5,6 +5,7 @@ from selenium import webdriver
 import unittest
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -42,6 +43,8 @@ class NewTest(unittest.TestCase):
         code_mirror_element = self.browser.find_element(By.CSS_SELECTOR, ".CodeMirror")
         self.browser.execute_script(
             "arguments[0].CodeMirror.setValue(arguments[1]);", code_mirror_element, "Forward 10")
+
+        self.browser.find_element(By.ID, 'mac_address')
 
 
 if __name__ == '__main__':
