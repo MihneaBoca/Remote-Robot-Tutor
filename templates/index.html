@@ -18,10 +18,10 @@
     </nav>
 
     <div class="container">
-        <div class="p-3">
-            <form action="" onsubmit="" method="POST">
+        <form action="" onsubmit="" method="POST">
             {% csrf_token %}
-            <textarea id="terminal" name="terminal" placeholder="Enter Your Code..." >Enter Your Code...</textarea>
+        <div class="p-3">
+            <textarea id="terminal" name="terminal" placeholder="/Enter Your Code..." >{{ enter_code }}{{ code }}</textarea>
             <script>
                 var editor = CodeMirror.fromTextArea(document.getElementById('terminal'), {
                     lineNumbers: true,
@@ -39,17 +39,33 @@
             <button class="btn btn-info" type="Submit" id="id_submit_simulator" name="submit_simulator">Run Simulator</button>
             <div style="float: right">
                 <label>MAC address: </label>
-                <input id="mac_address">
+                <input id="mac_address" name="mac_address" value={{ mac_address }}>
                 <br /> <br />
                 <div style="align-items: center" align="center">
-                    <select id="connection_type">
-                        <option value="usb">USB</option>
-                        <option value="bluetooth">Bluetooth</option>
-                        <option value="wifi">WIFI</option>
+                    <select id="connection_type" name="connection_type">
+                        <option value="usb" {% if connection_type == 'usb' %}selected{% endif %}>USB</option>
+                        <option value="bluetooth" {% if connection_type == 'bluetooth' %}selected{% endif %}>Bluetooth</option>
+                        <option value="wifi" {% if connection_type == 'wifi' %}selected{% endif %}>WIFI</option>
                     </select>
                 </div>
                 </div>
             </div>
+
+        <div class="p-3">
+            <br /> <br />
+            <textarea id="error_terminal" name="error_terminal" disabled>{{ output_terminal }}{{ message }}</textarea>
+            <script>
+                var editor = CodeMirror.fromTextArea(document.getElementById('error_terminal'), {
+                    lineNumbers: false,
+                    gutter: true,
+                    lineWrapping: true,
+                    theme: 'material',
+                    mode: 'xml',
+                });
+                editor.setSize(null, null);
+            </script>
+        </div>
+
         </div>
     </div>
 </body>
