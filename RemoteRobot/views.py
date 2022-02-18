@@ -6,6 +6,7 @@ import textx
 from RemoteRobot.models import Code
 from textx import metamodel_from_str
 import ev3_dc as ev3
+import socket
 
 
 def index(request):
@@ -22,6 +23,30 @@ def index(request):
         new_code = Code.objects.get_or_create(code=code, mac_address=mac_address, connection_type=connection_type)[0]
         print(code)
         message = 'Done.'
+        PORT = 8010
+
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(60)
+            s.bind(('', PORT))
+            s.listen()
+            print('Server is waiting...')
+
+            try:
+                conn, addr = s.accept()
+            except socket.timeout:
+                message = 'Connection timeout'
+                return render(request, 'index.html',
+                              {'code': code, 'mac_address': mac_address, 'connection_type': connection_type,
+                               'message': message})
+            print('Connected by', addr)
+            message = 'Connected by ' + str(addr)
+            my_str_as_bytes = str.encode("hello")
+            conn.sendall(my_str_as_bytes)
+            conn.close()
+            return render(request, 'index.html',
+                          {'code': code, 'mac_address': mac_address, 'connection_type': connection_type,
+                           'message': message})
+
         grammar = '''
 
         Program:
