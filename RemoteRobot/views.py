@@ -23,7 +23,13 @@ def index(request):
         new_code = Code.objects.get_or_create(code=code, mac_address=mac_address, connection_type=connection_type)[0]
         print(code)
         message = 'Done.'
+
         PORT = 8010
+
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("remoterobottutor-tp7vf.ondigitalocean.app", 80))
+        print(s.getsockname()[0])
+        s.close()
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.settimeout(60)
