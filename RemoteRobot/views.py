@@ -24,34 +24,54 @@ def index(request):
         print(code)
         message = 'Done.'
 
-        PORT = 8010
+        # PORT = 8010
+        #
+        # s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # s.connect(("remoterobottutor-tp7vf.ondigitalocean.app", 80))
+        # print(s.getsockname()[0])
+        # s.close()
 
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("remoterobottutor-tp7vf.ondigitalocean.app", 80))
-        print(s.getsockname()[0])
-        s.close()
+        HOST = '46.101.78.94'  # The server's hostname or IP address
+        PORT = 8010  # The port used by the server
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.settimeout(60)
-            s.bind(('', PORT))
-            s.listen()
-            print('Server is waiting...')
-
             try:
-                conn, addr = s.accept()
+                s.connect((HOST, PORT))
+                data = s.recv(1024)
+
+                print('Received', repr(data))
+                message = 'Received ' + repr(data)
             except socket.timeout:
                 message = 'Connection timeout'
                 return render(request, 'index.html',
                               {'code': code, 'mac_address': mac_address, 'connection_type': connection_type,
                                'message': message})
-            print('Connected by', addr)
-            message = 'Connected by ' + str(addr)
-            my_str_as_bytes = str.encode("hello")
-            conn.sendall(my_str_as_bytes)
-            conn.close()
+            s.close()
             return render(request, 'index.html',
                           {'code': code, 'mac_address': mac_address, 'connection_type': connection_type,
                            'message': message})
+
+        # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        #     s.settimeout(60)
+        #     s.bind(('', PORT))
+        #     s.listen()
+        #     print('Server is waiting...')
+        #
+        #     try:
+        #         conn, addr = s.accept()
+        #     except socket.timeout:
+        #         message = 'Connection timeout'
+        #         return render(request, 'index.html',
+        #                       {'code': code, 'mac_address': mac_address, 'connection_type': connection_type,
+        #                        'message': message})
+        #     print('Connected by', addr)
+        #     message = 'Connected by ' + str(addr)
+        #     my_str_as_bytes = str.encode("hello")
+        #     conn.sendall(my_str_as_bytes)
+        #     conn.close()
+        #     return render(request, 'index.html',
+        #                   {'code': code, 'mac_address': mac_address, 'connection_type': connection_type,
+        #                    'message': message})
 
         grammar = '''
 
