@@ -40,8 +40,15 @@ def index(request):
                 data = s.recv(1024)
 
                 print('Received', repr(data))
-                message = 'Received ' + repr(data)
-            except socket.timeout:
+
+                my_str_as_bytes = str.encode("website")
+                s.sendall(my_str_as_bytes)
+                my_str_as_bytes = str.encode(password)
+                s.sendall(my_str_as_bytes)
+                data = s.recv(1024)
+                print('Received', repr(data))
+                message = data.decode("utf-8")
+            except:
                 message = 'Connection timeout'
                 return render(request, 'index.html',
                               {'code': code, 'password': password, 'connection_type': connection_type,
