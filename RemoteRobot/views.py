@@ -14,13 +14,13 @@ def index(request):
     output_terminal = ""
 
     if request.method == 'POST':
-        if Code.objects.filter(mac_address=request.POST['mac_address']).exists():
-            Code.objects.filter(mac_address=request.POST['mac_address']).delete()
+        if Code.objects.filter(mac_address=request.POST['password']).exists():
+            Code.objects.filter(mac_address=request.POST['password']).delete()
         code = request.POST['terminal']
-        mac_address = request.POST['mac_address']
+        password = request.POST['password']
         connection_type = request.POST['connection_type']
         #error_terminal = request.POST['error_terminal']  # request.POST.get('error_terminal', '')#request.POST['error_terminal']
-        new_code = Code.objects.get_or_create(code=code, mac_address=mac_address, connection_type=connection_type)[0]
+        new_code = Code.objects.get_or_create(code=code, mac_address=password, connection_type=connection_type)[0]
         print(code)
         message = 'Done.'
 
@@ -44,11 +44,11 @@ def index(request):
             except socket.timeout:
                 message = 'Connection timeout'
                 return render(request, 'index.html',
-                              {'code': code, 'mac_address': mac_address, 'connection_type': connection_type,
+                              {'code': code, 'password': password, 'connection_type': connection_type,
                                'message': message})
             s.close()
             return render(request, 'index.html',
-                          {'code': code, 'mac_address': mac_address, 'connection_type': connection_type,
+                          {'code': code, 'password': password, 'connection_type': connection_type,
                            'message': message})
 
         # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -62,7 +62,7 @@ def index(request):
         #     except socket.timeout:
         #         message = 'Connection timeout'
         #         return render(request, 'index.html',
-        #                       {'code': code, 'mac_address': mac_address, 'connection_type': connection_type,
+        #                       {'code': code, 'password': password, 'connection_type': connection_type,
         #                        'message': message})
         #     print('Connected by', addr)
         #     message = 'Connected by ' + str(addr)
@@ -70,7 +70,7 @@ def index(request):
         #     conn.sendall(my_str_as_bytes)
         #     conn.close()
         #     return render(request, 'index.html',
-        #                   {'code': code, 'mac_address': mac_address, 'connection_type': connection_type,
+        #                   {'code': code, 'password': password, 'connection_type': connection_type,
         #                    'message': message})
 
         grammar = '''
@@ -111,7 +111,7 @@ def index(request):
         except (textx.exceptions.TextXSyntaxError, AttributeError):
             message = 'Expected comment or Forward, Backward, TurnRight or TurnLeft commands.'
             return render(request, 'index.html',
-                          {'code': code, 'mac_address': mac_address, 'connection_type': connection_type,
+                          {'code': code, 'password': password, 'connection_type': connection_type,
                            'message': message})
 
         class Robottutor(object):
@@ -152,7 +152,7 @@ def index(request):
             robot = Robottutor()
             result = robot.interpret(robot_code)
             print(result)
-            print(mac_address)
+            print(password)
         except AttributeError:
             result = []
 
@@ -169,7 +169,7 @@ def index(request):
                     0.01518,  # radius_wheel
                     0.11495,  # tread
                     protocol=protocol,
-                    host=str(mac_address),
+                    host=str(password),
                     speed=10
             ) as my_vehicle:
                 parcours = my_vehicle.drive_straight(0.0)
@@ -192,7 +192,7 @@ def index(request):
             # parcours = (exec(robot.interpret(robot_code)))
             # parcours.start(thread=False)
         return render(request, 'index.html',
-                      {'code': code, 'mac_address': mac_address, 'connection_type': connection_type,
+                      {'code': code, 'password': password, 'connection_type': connection_type,
                        'message': message})
 
     return render(request, 'index.html', {'enter_code': enter_code, 'output_terminal': output_terminal})

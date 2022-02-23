@@ -44,7 +44,7 @@ class NewTest(unittest.TestCase):
         self.browser.execute_script(
             "arguments[0].CodeMirror.setValue(arguments[1]);", code_mirror_element, "Forward 10")
 
-        self.browser.find_element(By.ID, 'mac_address')
+        self.browser.find_element(By.ID, 'password')
 
         select = Select(self.browser.find_element(By.ID, 'connection_type'))
 
