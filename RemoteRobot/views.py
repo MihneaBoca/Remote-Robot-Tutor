@@ -31,32 +31,32 @@ def index(request):
         # print(s.getsockname()[0])
         # s.close()
 
-        HOST = '46.101.78.94'  # The server's hostname or IP address
-        PORT = 8010  # The port used by the server
-
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            try:
-                s.connect((HOST, PORT))
-                data = s.recv(1024)
-
-                print('Received', repr(data))
-
-                my_str_as_bytes = str.encode("website")
-                s.sendall(my_str_as_bytes)
-                my_str_as_bytes = str.encode(password)
-                s.sendall(my_str_as_bytes)
-                data = s.recv(1024)
-                print('Received', repr(data))
-                message = data.decode("utf-8")
-            except:
-                message = 'Connection timeout'
-                return render(request, 'index.html',
-                              {'code': code, 'password': password, 'connection_type': connection_type,
-                               'message': message})
-            s.close()
-            return render(request, 'index.html',
-                          {'code': code, 'password': password, 'connection_type': connection_type,
-                           'message': message})
+        # HOST = '46.101.78.94'  # The server's hostname or IP address
+        # PORT = 8010  # The port used by the server
+        #
+        # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        #     try:
+        #         s.connect((HOST, PORT))
+        #         data = s.recv(1024)
+        #
+        #         print('Received', repr(data))
+        #
+        #         my_str_as_bytes = str.encode("website")
+        #         s.sendall(my_str_as_bytes)
+        #         my_str_as_bytes = str.encode(password)
+        #         s.sendall(my_str_as_bytes)
+        #         data = s.recv(1024)
+        #         print('Received', repr(data))
+        #         message = data.decode("utf-8")
+        #     except:
+        #         message = 'Connection timeout'
+        #         return render(request, 'index.html',
+        #                       {'code': code, 'password': password, 'connection_type': connection_type,
+        #                        'message': message})
+        #     s.close()
+        #     return render(request, 'index.html',
+        #                   {'code': code, 'password': password, 'connection_type': connection_type,
+        #                    'message': message})
 
         # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         #     s.settimeout(60)
@@ -126,28 +126,28 @@ def index(request):
             def interpret(self, model):
 
                 # initialise string
-                result = []
+                result = ''
 
                 # model is an instance of program
                 for c in model.commands:
 
                     if c.__class__.__name__ == "ForwardCommand":
-                        result.append('f ' + str(0.2 * float(c.f)))
+                        result += 'f ' + str(float(c.f)) + '\n'
                         # result += "my_vehicle.drive_straight(" + str(0.2*float(c.f)) + ")" + "\n"#"Forward " + str(c.f)
                         # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "BackwardCommand":
-                        result.append('b ' + str(-0.2 * float(c.b)))
+                        result += 'b ' + str(float(c.b)) + '\n'
                         # result += "my_vehicle.drive_straight(" + str(-0.2*float(c.b)) + ")" + "\n"
                         # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "TurnRightCommand":
-                        result.append('r ' + str(-float(c.r)))
+                        result += 'r ' + str(float(c.r)) + '\n'
                         # result += "my_vehicle.drive_turn(" + str(float(c.r)) + ", 0.0)\n"
                         # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "TurnLeftCommand":
-                        result.append('l ' + str(float(c.l)))
+                        result += 'l ' + str(float(c.l)) + '\n'
                         # result += "my_vehicle.drive_turn(" + str(-float(c.l)) + ", 0.0)\n"
                         # resultStr = resultStr + result + "\n"
 
@@ -162,6 +162,45 @@ def index(request):
             print(password)
         except AttributeError:
             result = []
+
+        HOST = '46.101.78.94'  # The server's hostname or IP address
+        PORT = 8010  # The port used by the server
+
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            try:
+                s.connect((HOST, PORT))
+                data = s.recv(1024)
+
+                print('Received', repr(data))
+
+                my_str_as_bytes = str.encode("website")
+                s.sendall(my_str_as_bytes)
+                my_str_as_bytes = str.encode(password)
+                s.sendall(my_str_as_bytes)
+                data = s.recv(1024)
+                print('Received', repr(data))
+                message = data.decode("utf-8")
+                if message.__contains__('No robot found for the code provided'):
+                    s.close()
+                    return render(request, 'index.html',
+                                  {'code': code, 'password': password, 'connection_type': connection_type,
+                                   'message': message})
+                my_str_as_bytes = str.encode(result)
+                s.sendall(my_str_as_bytes)
+
+            except:
+                try:
+                    s.close()
+                except:
+                    pass
+                message = 'Connection timeout'
+                return render(request, 'index.html',
+                              {'code': code, 'password': password, 'connection_type': connection_type,
+                               'message': message})
+            s.close()
+            return render(request, 'index.html',
+                          {'code': code, 'password': password, 'connection_type': connection_type,
+                           'message': message})
 
         if connection_type == 'usb':
             protocol = ev3.USB
