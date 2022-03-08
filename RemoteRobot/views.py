@@ -14,11 +14,11 @@ def index(request):
     output_terminal = ""
 
     if request.method == 'POST':
-        if Code.objects.filter(mac_address=request.POST['password']).exists():
-            Code.objects.filter(mac_address=request.POST['password']).delete()
+        if Code.objects.filter(password=request.POST['password']).exists():
+            Code.objects.filter(password=request.POST['password']).delete()
         code = request.POST['terminal']
         password = request.POST['password']
-        new_code = Code.objects.get_or_create(code=code, mac_address=password)[0]
+        new_code = Code.objects.get_or_create(code=code, password=password)[0]
         print(code)
         message = 'Done.'
 
