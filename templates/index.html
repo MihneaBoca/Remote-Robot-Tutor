@@ -40,14 +40,6 @@
             <div style="float: right">
                 <label>Code: </label>
                 <input id="password" name="password" value={{ password }}>
-                <br /> <br />
-                <div style="align-items: center" align="center">
-                    <select id="connection_type" name="connection_type">
-                        <option value="usb" {% if connection_type == 'usb' %}selected{% endif %}>USB</option>
-                        <option value="bluetooth" {% if connection_type == 'bluetooth' %}selected{% endif %}>Bluetooth</option>
-                        <option value="wifi" {% if connection_type == 'wifi' %}selected{% endif %}>WIFI</option>
-                    </select>
-                </div>
                 </div>
             </div>
 

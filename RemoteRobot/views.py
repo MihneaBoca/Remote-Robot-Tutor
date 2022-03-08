@@ -18,67 +18,9 @@ def index(request):
             Code.objects.filter(mac_address=request.POST['password']).delete()
         code = request.POST['terminal']
         password = request.POST['password']
-        connection_type = request.POST['connection_type']
-        #error_terminal = request.POST['error_terminal']  # request.POST.get('error_terminal', '')#request.POST['error_terminal']
-        new_code = Code.objects.get_or_create(code=code, mac_address=password, connection_type=connection_type)[0]
+        new_code = Code.objects.get_or_create(code=code, mac_address=password)[0]
         print(code)
         message = 'Done.'
-
-        # PORT = 8010
-        #
-        # s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        # s.connect(("remoterobottutor-tp7vf.ondigitalocean.app", 80))
-        # print(s.getsockname()[0])
-        # s.close()
-
-        # HOST = '46.101.78.94'  # The server's hostname or IP address
-        # PORT = 8010  # The port used by the server
-        #
-        # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        #     try:
-        #         s.connect((HOST, PORT))
-        #         data = s.recv(1024)
-        #
-        #         print('Received', repr(data))
-        #
-        #         my_str_as_bytes = str.encode("website")
-        #         s.sendall(my_str_as_bytes)
-        #         my_str_as_bytes = str.encode(password)
-        #         s.sendall(my_str_as_bytes)
-        #         data = s.recv(1024)
-        #         print('Received', repr(data))
-        #         message = data.decode("utf-8")
-        #     except:
-        #         message = 'Connection timeout'
-        #         return render(request, 'index.html',
-        #                       {'code': code, 'password': password, 'connection_type': connection_type,
-        #                        'message': message})
-        #     s.close()
-        #     return render(request, 'index.html',
-        #                   {'code': code, 'password': password, 'connection_type': connection_type,
-        #                    'message': message})
-
-        # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        #     s.settimeout(60)
-        #     s.bind(('', PORT))
-        #     s.listen()
-        #     print('Server is waiting...')
-        #
-        #     try:
-        #         conn, addr = s.accept()
-        #     except socket.timeout:
-        #         message = 'Connection timeout'
-        #         return render(request, 'index.html',
-        #                       {'code': code, 'password': password, 'connection_type': connection_type,
-        #                        'message': message})
-        #     print('Connected by', addr)
-        #     message = 'Connected by ' + str(addr)
-        #     my_str_as_bytes = str.encode("hello")
-        #     conn.sendall(my_str_as_bytes)
-        #     conn.close()
-        #     return render(request, 'index.html',
-        #                   {'code': code, 'password': password, 'connection_type': connection_type,
-        #                    'message': message})
 
         grammar = '''
 
@@ -118,8 +60,7 @@ def index(request):
         except (textx.exceptions.TextXSyntaxError, AttributeError):
             message = 'Expected comment or Forward, Backward, TurnRight or TurnLeft commands.'
             return render(request, 'index.html',
-                          {'code': code, 'password': password, 'connection_type': connection_type,
-                           'message': message})
+                          {'code': code, 'password': password, 'message': message})
 
         class Robottutor(object):
 
@@ -183,8 +124,7 @@ def index(request):
                 if message.__contains__('No robot found for the code provided'):
                     s.close()
                     return render(request, 'index.html',
-                                  {'code': code, 'password': password, 'connection_type': connection_type,
-                                   'message': message})
+                                  {'code': code, 'password': password, 'message': message})
                 my_str_as_bytes = str.encode(result)
                 s.sendall(my_str_as_bytes)
 
@@ -195,50 +135,9 @@ def index(request):
                     pass
                 message = 'Connection timeout'
                 return render(request, 'index.html',
-                              {'code': code, 'password': password, 'connection_type': connection_type,
-                               'message': message})
+                              {'code': code, 'password': password, 'message': message})
             s.close()
             return render(request, 'index.html',
-                          {'code': code, 'password': password, 'connection_type': connection_type,
-                           'message': message})
-
-        if connection_type == 'usb':
-            protocol = ev3.USB
-        elif connection_type == 'wifi':
-            protocol = ev3.WIFI
-        else:
-            protocol = ev3.BLUETOOTH
-
-        try:
-
-            with ev3.TwoWheelVehicle(
-                    0.01518,  # radius_wheel
-                    0.11495,  # tread
-                    protocol=protocol,
-                    host=str(password),
-                    speed=10
-            ) as my_vehicle:
-                parcours = my_vehicle.drive_straight(0.0)
-                for i in result:
-                    if i[0] == 'f':
-                        my_vehicle.drive_straight(float(i[2:])).start(thread=False)
-                    elif i[0] == 'b':
-                        my_vehicle.drive_straight(float(i[2:])).start(thread=False)
-                    elif i[0] == 'r':
-                        my_vehicle.drive_turn(float(i[2:]), 0.0).start(thread=False)
-                    elif i[0] == 'l':
-                        my_vehicle.drive_turn(float(i[2:]), 0.0).start(thread=False)
-        except ev3.exceptions.NoEV3:
-            message = "No EV3 found.\n"
-            # messages.error(request, "No EV3 found.")
-        except usb.core.NoBackendError:
-            message = "No backend available for USB.\n"
-            # messages.error(request, "No EV3 found.")
-
-            # parcours = (exec(robot.interpret(robot_code)))
-            # parcours.start(thread=False)
-        return render(request, 'index.html',
-                      {'code': code, 'password': password, 'connection_type': connection_type,
-                       'message': message})
+                          {'code': code, 'password': password, 'message': message})
 
     return render(request, 'index.html', {'enter_code': enter_code, 'output_terminal': output_terminal})
