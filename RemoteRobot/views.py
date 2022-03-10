@@ -102,21 +102,25 @@ def index(request):
             print(result)
             print(password)
         except AttributeError:
-            result = []
+            result = ''
+
+        if result == '':
+            result = 'Comment'
 
         HOST = '46.101.78.94'  # The server's hostname or IP address
         PORT = 8010  # The port used by the server
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             try:
+                s.settimeout(30)
                 s.connect((HOST, PORT))
                 data = s.recv(1024)
 
                 print('Received', repr(data))
 
-                my_str_as_bytes = str.encode("website")
-                s.sendall(my_str_as_bytes)
-                my_str_as_bytes = str.encode(password)
+                my_str_as_bytes = str.encode("website\n" + password)
+                #s.sendall(my_str_as_bytes)
+                #my_str_as_bytes = str.encode(password)
                 s.sendall(my_str_as_bytes)
                 data = s.recv(1024)
                 print('Received', repr(data))
