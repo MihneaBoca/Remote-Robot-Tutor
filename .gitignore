@@ -13,3 +13,5 @@ db.sqlite3
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+.idea/
+venv/
