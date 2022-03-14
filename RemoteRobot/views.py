@@ -119,8 +119,8 @@ def index(request):
                 print('Received', repr(data))
 
                 my_str_as_bytes = str.encode("website\n" + password)
-                #s.sendall(my_str_as_bytes)
-                #my_str_as_bytes = str.encode(password)
+                # s.sendall(my_str_as_bytes)
+                # my_str_as_bytes = str.encode(password)
                 s.sendall(my_str_as_bytes)
                 data = s.recv(1024)
                 print('Received', repr(data))
@@ -145,3 +145,101 @@ def index(request):
                           {'code': code, 'password': password, 'message': message})
 
     return render(request, 'index.html', {'enter_code': enter_code, 'output_terminal': output_terminal})
+
+
+def simulator(request):
+    enter_code = "//Enter your code here..."
+    output_terminal = ""
+    result = ""
+
+    if request.method == 'POST':
+        code = request.POST['terminal']
+        print(code)
+        message = 'Done.'
+
+        grammar = '''
+
+        Program:
+            commands*=Command
+        ;
+
+        Command:
+            ForwardCommand | BackwardCommand | TurnRightCommand | TurnLeftCommand
+        ;
+
+        ForwardCommand:
+            'Forward' f=FLOAT
+        ;
+
+        BackwardCommand:
+            'Backward' b=FLOAT
+        ;
+
+        TurnRightCommand:
+            'TurnRight' r=FLOAT
+        ;
+
+        TurnLeftCommand:
+            'TurnLeft' l=FLOAT
+        ;
+
+        Comment:
+            /\/\/.*$/
+        ;
+        '''
+        try:
+            robot_grammar = metamodel_from_str(grammar)
+            print(robot_grammar)
+            robot_code = robot_grammar.model_from_str(code)
+
+        except (textx.exceptions.TextXSyntaxError, AttributeError):
+            message = 'Expected comment or Forward, Backward, TurnRight or TurnLeft commands.'
+            return render(request, 'simulator.html',
+                          {'code': code, 'message': message})
+
+        class Robottutor(object):
+
+            def interpret(self, model):
+
+                # initialise string
+                result = ''
+
+                # model is an instance of program
+                for c in model.commands:
+
+                    if c.__class__.__name__ == "ForwardCommand":
+                        result += 'f ' + str(float(c.f)) + ' '
+                        # result += "my_vehicle.drive_straight(" + str(0.2*float(c.f)) + ")" + "\n"#"Forward " + str(c.f)
+                        # resultStr = resultStr + result + "\n"
+
+                    elif c.__class__.__name__ == "BackwardCommand":
+                        result += 'b ' + str(float(c.b)) + ' '
+                        # result += "my_vehicle.drive_straight(" + str(-0.2*float(c.b)) + ")" + "\n"
+                        # resultStr = resultStr + result + "\n"
+
+                    elif c.__class__.__name__ == "TurnRightCommand":
+                        result += 'r ' + str(float(c.r)) + ' '
+                        # result += "my_vehicle.drive_turn(" + str(float(c.r)) + ", 0.0)\n"
+                        # resultStr = resultStr + result + "\n"
+
+                    elif c.__class__.__name__ == "TurnLeftCommand":
+                        result += 'l ' + str(float(c.l)) + ' '
+                        # result += "my_vehicle.drive_turn(" + str(-float(c.l)) + ", 0.0)\n"
+                        # resultStr = resultStr + result + "\n"
+
+                    else:
+                        print("Invalid")
+                return result
+
+        try:
+            robot = Robottutor()
+            result = robot.interpret(robot_code)
+            print(result)
+        except AttributeError:
+            result = ''
+
+        return render(request, 'simulator.html',
+                      {'code': code, 'message': message, 'result': result})
+
+    return render(request, 'simulator.html',
+                  {'enter_code': enter_code, 'output_terminal': output_terminal, 'result': result})
