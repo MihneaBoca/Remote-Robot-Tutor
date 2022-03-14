@@ -55,6 +55,9 @@
                 let yellowX = 350;
                 let yellowY = 350;
 
+                let minEnd = 10;
+                let maxEnd =350;
+
                 {#var thumbImg = document.createElement('img');#}
 
                 {#thumbImg.src = "{% static "robot.png" %}";#}
@@ -220,31 +223,39 @@
                     if (front === true) {
                         if (direction === "east") {
                         if (increment < 70) {
-                            rx += 1
-                            increment += 1
+                            if (rx < maxEnd) {
+                                rx += 1;
+                            }
+                            increment += 1;
                             } else {
                             wait = false
                             }
                         } else {
                             if (direction === "south") {
                                 if (increment < 70) {
-                                    ry += 1
-                                    increment += 1
+                                    if (ry < maxEnd) {
+                                        ry += 1;
+                                    }
+                                    increment += 1;
                                 } else {
                                     wait = false
                                     }
                             } else {
                                 if (direction === "west") {
                                     if (increment < 70) {
-                                        rx -= 1
-                                        increment += 1
+                                        if (rx > minEnd) {
+                                            rx -= 1;
+                                        }
+                                        increment += 1;
                                     }  else {
                                         wait = false
                                         }
                                 } else {
                                     if (increment < 70) {
-                                        ry -= 1
-                                        increment += 1
+                                        if (ry > minEnd) {
+                                            ry -= 1;
+                                        }
+                                        increment += 1;
                                     } else {
                                         wait = false
                                         }
@@ -254,31 +265,41 @@
                     } else {
                         if (direction === "west") {
                         if (increment < 70) {
-                            rx += 1
-                            increment += 1
+                            if (rx < maxEnd) {
+                                rx += 1;
+                            }
+                            increment += 1;
                             } else {
                             wait = false
                             }
                         } else {
                             if (direction === "north") {
                                 if (increment < 70) {
-                                    ry += 1
-                                    increment += 1
+                                    if (ry < maxEnd) {
+                                        if (ry < maxEnd) {
+                                        ry += 1;
+                                    }
+                                    }
+                                    increment += 1;
                                 } else {
                                     wait = false
                                     }
                             } else {
                                 if (direction === "east") {
                                     if (increment < 70) {
-                                        rx -= 1
-                                        increment += 1
+                                        if (rx > minEnd) {
+                                            rx -= 1;
+                                        }
+                                        increment += 1;
                                     }  else {
                                         wait = false
                                         }
                                 } else {
                                     if (increment < 70) {
-                                        ry -= 1
-                                        increment += 1
+                                        if (ry > minEnd) {
+                                            ry -= 1;
+                                        }
+                                        increment += 1;
                                     } else {
                                         wait = false
                                         }
