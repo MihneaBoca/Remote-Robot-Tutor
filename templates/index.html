@@ -13,7 +13,17 @@
 <body>
     <nav class="mb-1 navbar navbar-expand-sm navbar-default" style="background-color: #325f5e;">
         <div class="container">
-         <a class="navbar-brand"  href="#" style="font-family:courier; font-size: 25px; text-align: center; color: #ffffff"><strong>Remote Robot Tutor</strong></a>
+            <div class="row">
+                <div class="col">
+                    <a class="navbar-brand"  href="" style="font-family:courier; font-size: 25px; text-align: center; color: #ffffff"><strong>Remote Robot Tutor</strong></a>
+                </div>
+                <div class="col-md-auto">
+                    <a class="nav-item nav-link" href="{% url 'index' %}" style="color: white; font-family:courier;font-size: 19px;text-align: center;"><strong>Robot</strong></a>
+                </div>
+                <div class="col col-lg-2">
+                    <a class="nav-item nav-link" href="{% url 'simulator' %}" style="color: white; font-family:courier;font-size: 19px;text-align: center;"><strong>Simulator</strong></a>
+                </div>
+            </div>
         </div>
     </nav>
 
