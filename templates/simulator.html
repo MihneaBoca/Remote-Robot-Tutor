@@ -65,86 +65,12 @@
                 let yellowX = 350;
                 let yellowY = 350;
 
+                let redX = [78, 78, 214];
+                let redY = [10, 214, 146];
+
                 let minEnd = 10;
                 let maxEnd =350;
-
-                {#var thumbImg = document.createElement('img');#}
-
-                {#thumbImg.src = "{% static "robot.png" %}";#}
-                {#thumbImg.onload = function() {#}
-                {#    tmpCtx.save();#}
-                {#    tmpCtx.beginPath();#}
-                {#    tmpCtx.arc(25, 25, 25, 0, Math.PI * 2, true);#}
-                {#    tmpCtx.closePath();#}
-                {#    tmpCtx.clip();#}
-                {##}
-                {#    tmpCtx.drawImage(thumbImg, 0, 0, 50, 50);#}
-                {##}
-                {#    tmpCtx.beginPath();#}
-                {#    tmpCtx.arc(0, 0, 25, 0, Math.PI * 2, true);#}
-                {#    tmpCtx.clip();#}
-                {#    tmpCtx.closePath();#}
-                {#    tmpCtx.restore();#}
-                {# };#}
-
-                {#ctx.beginPath();#}
-                {#ctx.rect(20, 40, 50, 50);#}
-                {#ctx.fillStyle = "#FF0000";#}
-                {#ctx.fill();#}
-                {#ctx.closePath();#}
-
-
-                {#ctx.beginPath();#}
-                {#ctx.rect(160, 10, 100, 40);#}
-                {#ctx.strokeStyle = "rgba(0, 0, 255, 0.5)";#}
-                {#ctx.stroke();#}
-                {#ctx.closePath();#}
-
-                {#ctx.beginPath();#}
-                {#ctx.rect(390, 60, 50, 50);#}
-                {#ctx.fillStyle = "#FF0000";#}
-                {#ctx.fill();#}
-                {#ctx.closePath();#}
-
-                {#ctx.beginPath();#}
-                {#for (let circleY = 75; circleY <= 225; circleY += 75) {#}
-                {#    for (let circleX = 75; circleX <= 225; circleX += 75) {#}
-                {#      circle(circleX, circleY, 50);#}
-                {#      ctx.beginPath();#}
-                {#      ctx.rect(circleX, circleY, 50, 50);#}
-                {#      ctx.fillStyle = "#FF0000";#}
-                {#      ctx.fill();#}
-                {#      ctx.closePath();#}
-                {#    }#}
-                {#  }#}
-                {#ctx.closePath();#}
-
-                {#const result = await fetch("{%  static  'robot.png' %}");#}
-                {#const blob = await result.blob();#}
-                {#const image = await createImageBitmap(blob);#}
-                {#const pattern = ctx.createPattern(image, 'repeat');#}
-
-                {#var TO_RADIANS = Math.PI/180;#}
-                {#function drawRotatedImage(image, x, y, angle)#}
-                {#{#}
-                {#    // save the current co-ordinate system#}
-                {#    // before we screw with it#}
-                {#    context.save();#}
-                {##}
-                {#    // move to the middle of where we want to draw our image#}
-                {#    context.translate(x, y);#}
-                {##}
-                {#    // rotate around that point, converting our#}
-                {#    // angle from degrees to radians#}
-                {#    context.rotate(angle * TO_RADIANS);#}
-                {##}
-                {#    // draw it up and to the left by half the width#}
-                {#    // and height of the image#}
-                {#    context.drawImage(image, -(image.width/2), -(image.height/2));#}
-                {##}
-                {#    // and restore the co-ords to how they were when we began#}
-                {#    context.restore();#}
-                {# }#}
+                let done = false;
 
 
                 function drawMap() {
@@ -154,7 +80,7 @@
                             ctx.rect(i, j, 50, 50);
                             ctx.fillStyle = "#2DB46E";{#"#FF0000";#}
                             ctx.fill();
-                            ctx.globalCompositeOperation = 'source-over'
+                            ctx.globalCompositeOperation = 'source-over';
                             ctx.closePath();
                         }
                     }
@@ -162,8 +88,18 @@
                     ctx.rect(yellowX, yellowY, 50, 50);
                     ctx.fillStyle = "yellow";
                     ctx.fill();
-                    ctx.globalCompositeOperation = 'source-over'
+                    ctx.globalCompositeOperation = 'source-over';
                     ctx.closePath();
+
+                    for (let k = 0; k < redX.length; k++) {
+                        ctx.beginPath();
+                        ctx.rect(redX[k], redY[k], 50, 50);
+                        ctx.fillStyle = "red";
+                        ctx.fill();
+                        ctx.globalCompositeOperation = 'source-over';
+                        ctx.closePath();
+                    }
+
                 }
 
                 drawMap()
@@ -228,13 +164,31 @@
                     ctx.beginPath();
                     ctx.stroke();
 
+                    let redBlock = false;
 
 
                     if (front === true) {
                         if (direction === "east") {
                         if (increment < 70) {
                             if (rx < maxEnd) {
-                                rx += 1;
+                                for (let i= 0; i<redY.length; i++){
+                                            if (Math.abs(redY[i]-ry)<10) {
+                                                redBlock = true;
+                                            }
+                                        }
+                                        if (redBlock) {
+                                            redBlock = false;
+                                            for (let i= 0; i<redX.length; i++){
+                                                if (Math.abs(redX[i]-rx)<80) {
+                                                    redBlock = true;
+                                                }
+                                            }
+                                        }
+                                if (redBlock === false) {
+                                    rx += 1;
+                                } else {
+                                            increment = 69;
+                                        }
                             }
                             increment += 1;
                             } else {
@@ -244,7 +198,25 @@
                             if (direction === "south") {
                                 if (increment < 70) {
                                     if (ry < maxEnd) {
-                                        ry += 1;
+                                        for (let i= 0; i<redX.length; i++){
+                                            if (Math.abs(redX[i]-rx)<10) {
+                                                redBlock = true;
+                                            }
+                                        }
+                                        if (redBlock) {
+                                            redBlock = false;
+                                            for (let i= 0; i<redY.length; i++){
+                                                if (Math.abs(redY[i]-ry)<80) {
+                                                    redBlock = true;
+                                                }
+                                            }
+                                        }
+                                        if (redBlock === false) {
+                                            ry += 1;
+                                        } else {
+                                            increment = 69;
+                                        }
+
                                     }
                                     increment += 1;
                                 } else {
@@ -254,7 +226,24 @@
                                 if (direction === "west") {
                                     if (increment < 70) {
                                         if (rx > minEnd) {
-                                            rx -= 1;
+                                            for (let i= 0; i<redY.length; i++){
+                                                if (Math.abs(redY[i]-ry)<10) {
+                                                    redBlock = true;
+                                                }
+                                            }
+                                            if (redBlock) {
+                                                redBlock = false;
+                                                for (let i= 0; i<redX.length; i++){
+                                                    if (Math.abs(redX[i]-rx)<80) {
+                                                        redBlock = true;
+                                                    }
+                                                }
+                                            }
+                                    if (redBlock === false) {
+                                        rx -= 1;
+                                    } else {
+                                                increment = 69;
+                                            }
                                         }
                                         increment += 1;
                                     }  else {
@@ -263,7 +252,24 @@
                                 } else {
                                     if (increment < 70) {
                                         if (ry > minEnd) {
-                                            ry -= 1;
+                                            for (let i= 0; i<redX.length; i++){
+                                                if (Math.abs(redX[i]-rx)<10) {
+                                                    redBlock = true;
+                                                }
+                                            }
+                                            if (redBlock) {
+                                                redBlock = false;
+                                                for (let i= 0; i<redY.length; i++){
+                                                    if (Math.abs(redY[i]-ry)<80) {
+                                                        redBlock = true;
+                                                    }
+                                                }
+                                            }
+                                            if (redBlock === false) {
+                                                ry -= 1;
+                                            } else {
+                                                increment = 69;
+                                            }
                                         }
                                         increment += 1;
                                     } else {
@@ -276,7 +282,24 @@
                         if (direction === "west") {
                         if (increment < 70) {
                             if (rx < maxEnd) {
-                                rx += 1;
+                                for (let i= 0; i<redY.length; i++){
+                                            if (Math.abs(redY[i]-ry)<10) {
+                                                redBlock = true;
+                                            }
+                                        }
+                                        if (redBlock) {
+                                            redBlock = false;
+                                            for (let i= 0; i<redX.length; i++){
+                                                if (Math.abs(redX[i]-rx)<80) {
+                                                    redBlock = true;
+                                                }
+                                            }
+                                        }
+                                if (redBlock === false) {
+                                    rx += 1;
+                                } else {
+                                            increment = 69;
+                                        }
                             }
                             increment += 1;
                             } else {
@@ -286,9 +309,24 @@
                             if (direction === "north") {
                                 if (increment < 70) {
                                     if (ry < maxEnd) {
-                                        if (ry < maxEnd) {
-                                        ry += 1;
-                                    }
+                                        for (let i= 0; i<redX.length; i++){
+                                            if (Math.abs(redX[i]-rx)<10) {
+                                                redBlock = true;
+                                            }
+                                        }
+                                        if (redBlock) {
+                                            redBlock = false;
+                                            for (let i= 0; i<redY.length; i++){
+                                                if (Math.abs(redY[i]-ry)<80) {
+                                                    redBlock = true;
+                                                }
+                                            }
+                                        }
+                                        if (redBlock === false) {
+                                            ry += 1;
+                                        } else {
+                                            increment = 69;
+                                        }
                                     }
                                     increment += 1;
                                 } else {
@@ -298,7 +336,24 @@
                                 if (direction === "east") {
                                     if (increment < 70) {
                                         if (rx > minEnd) {
-                                            rx -= 1;
+                                            for (let i= 0; i<redY.length; i++){
+                                                if (Math.abs(redY[i]-ry)<10) {
+                                                    redBlock = true;
+                                                }
+                                            }
+                                            if (redBlock) {
+                                                redBlock = false;
+                                                for (let i= 0; i<redX.length; i++){
+                                                    if (Math.abs(redX[i]-rx)<80) {
+                                                        redBlock = true;
+                                                    }
+                                                }
+                                            }
+                                    if (redBlock === false) {
+                                        rx -= 1;
+                                    } else {
+                                                increment = 69;
+                                            }
                                         }
                                         increment += 1;
                                     }  else {
@@ -307,7 +362,24 @@
                                 } else {
                                     if (increment < 70) {
                                         if (ry > minEnd) {
-                                            ry -= 1;
+                                            for (let i= 0; i<redX.length; i++){
+                                                if (Math.abs(redX[i]-rx)<10) {
+                                                    redBlock = true;
+                                                }
+                                            }
+                                            if (redBlock) {
+                                                redBlock = false;
+                                                for (let i= 0; i<redY.length; i++){
+                                                    if (Math.abs(redY[i]-ry)<80) {
+                                                        redBlock = true;
+                                                    }
+                                                }
+                                            }
+                                            if (redBlock === false) {
+                                                ry -= 1;
+                                            } else {
+                                                increment = 69;
+                                            }
                                         }
                                         increment += 1;
                                     } else {
@@ -528,6 +600,7 @@
                                 increment = 1;
                                 console.log('for')
                                     forward();
+                                {#console.log(rx,ry)#}
                                 {#if (increment === 70) {increment = 1}#}
 
 
@@ -550,373 +623,23 @@
 
 
                             }
+                            if (queue.length === 0) {
+                                if (Math.abs(yellowX-rx)<10 && Math.abs(yellowY-ry)<10 && done === false) {
+                                    console.log("You have reached the destination!");
+                                    done = true;
+                                }
+                            }
+                            {#console.log(rx,ry);#}
+                            {#console.log(queue.length);#}
 
 
                     }
 
-                    {# for (let i = 0; i < code.length; i++) {#}
-                    {#        if(code.charAt(i) === 'f') {#}
-                    {#            wait = true;#}
-                    {#            console.log('for')#}
-                    {#                forward();#}
-                    {#            if (increment === 70) {increment = 1}#}
-                    {##}
-                    {##}
-                    {#        }#}
-                    {#        if(code.charAt(i) === 'r') {#}
-                    {#            turnRight();#}
-                    {#        }#}
-                    {##}
-                    {# }#}
-                    {#animate()#}
-
                 }
 
-                if (queue !== []){
+                if (queue.length !== 0){
                     move();
                 }
-
-
-
-
-
-                {#// ease function#}
-                {#function easeInOut(x, pow = 2) {#}
-                {#    x = x < 0 ? 0: x > 1 ? 1 : x;#}
-                {#    var xx = Math.pow(x,pow);#}
-                {#    return xx/(xx+Math.pow(1-x,pow));#}
-                {# };#}
-                {#function MyObj(){#}
-                {#    this.x = 100;#}
-                {#    this.y = 100;#}
-                {#    this.size = 40;#}
-                {#    this.scale = 1;#}
-                {# }#}
-                {#MyObj.prototype = {#}
-                {#    getUnitTime(duration){  // get the unit time#}
-                {#        var unitTime = (globalTime - startTime) / duration;#}
-                {#        if(unitTime >= 1){ // if over time#}
-                {#             unitTime = 1; // make sure that the current frame is not over#}
-                {#             startTime = startTime + duration; // next frame start (could be in the past)#}
-                {#             currentAnim = undefined#}
-                {#        }#}
-                {#        return unitTime;#}
-                {#    },#}
-                {#    grow(){#}
-                {#        drawText("Grow 1s");#}
-                {#        // grow for 1 second#}
-                {#        this.scale = easeInOut(this.getUnitTime(1000)) * 0.6 + 1;#}
-                {#    },#}
-                {#    shrink(){#}
-                {#        drawText("Shrink 1s");#}
-                {#        // shrink for 1 second#}
-                {#        this.scale = 1.6 - easeInOut(this.getUnitTime(1000)) * 0.6 ;#}
-                {#    },#}
-                {#    forward() {#}
-                {#        requestAnimationFrame(forward);#}
-                {#        ctx.clearRect(0, 0, innerWidth, innerHeight)#}
-                {#        drawMap()#}
-                {##}
-                {#        ctx.drawImage(r, rx, ry);#}
-                {#        ctx.beginPath();#}
-                {#        ctx.stroke();#}
-                {##}
-                {##}
-                {#        if (direction === "east") {#}
-                {#            if (increment < 70) {#}
-                {#                rx += 1;#}
-                {#                increment += 1;#}
-                {#            } else {#}
-                {#                wait = false#}
-                {#            }#}
-                {#        } else {#}
-                {#            if (direction === "south") {#}
-                {#                if (increment < 70) {#}
-                {#                    ry += 1;#}
-                {#                    increment += 1;#}
-                {#                } else {#}
-                {#                    wait = false#}
-                {#                }#}
-                {#            } else {#}
-                {#                if (direction === "west") {#}
-                {#                    if (increment < 70) {#}
-                {#                        rx -= 1;#}
-                {#                        increment += 1;#}
-                {#                    } else {#}
-                {#                        wait = false;#}
-                {#                    }#}
-                {#                } else {#}
-                {#                    if (increment < 70) {#}
-                {#                        ry -= 1;#}
-                {#                        increment += 1;#}
-                {#                    } else {#}
-                {#                        wait = false;#}
-                {#                    }#}
-                {#                }#}
-                {#            }#}
-                {#            this.scale = easeInOut(this.getUnitTime(1000)) * 0.6 + 1;#}
-                {#        }#}
-                {#    },#}
-                {#    setIncrement(){#}
-                {#        increment = 1;#}
-                {#        this.scale = easeInOut(this.getUnitTime(1000)) * 0.6 + 1;#}
-                {#    },#}
-                {#    turnRight() {#}
-                {#    getUnitTime(2000);#}
-                {#    if (direction === "east") {#}
-                {#                r.src = "{% static "robot-south.png" %}";#}
-                {#                direction = "south";#}
-                {#            } else {#}
-                {#                if (direction === "south") {#}
-                {#                    r.src = "{% static "robot-west.png" %}";#}
-                {#                    direction = "west";#}
-                {#                } else {#}
-                {#                    if (direction === "west") {#}
-                {#                        r.src = "{% static "robot-north.png" %}";#}
-                {#                        direction = "north";#}
-                {#                    } else {#}
-                {#                        r.src = "{% static "robot-east.png" %}";#}
-                {#                        direction = "east";#}
-                {#                    }#}
-                {#                }#}
-                {#            }#}
-                {#        this.scale = easeInOut(this.getUnitTime(1000)) * 0.6 + 1;#}
-                {#    },#}
-                {#    timeup(){#}
-                {#       drawText("Click to Animate");#}
-                {#       currentAnim = undefined;#}
-                {##}
-                {#    },#}
-                {#    draw(ctx){#}
-                {#       ctx.fillStyle = "red";#}
-                {#       ctx.beginPath();#}
-                {#       ctx.arc(this.x, this.y, this.size * this.scale, 0, Math.PI * 2);#}
-                {#       ctx.fill();#}
-                {#    }#}
-                {# }#}
-                {##}
-                {#function drawText(text){#}
-                {#    ctx.fillStyle = "black";#}
-                {#    ctx.fillText(text,100,36);#}
-                {# }#}
-                {#var obj = new MyObj(); // create the object#}
-                {##}
-                {#// holds the animation list#}
-                {#const animationStack = [obj.timeup.bind(obj)];#}
-                {##}
-                {#var currentAnim;  // index of current animation#}
-                {#var startTime;    // start time of current animation#}
-                {#var globalTime;   // time from the requestAnimationFrame callback argument#}
-                {#ctx.font = "26px arial";#}
-                {#ctx.textAlign = "center";#}
-                {##}
-                {#function startAnim(){#}
-                {#    animationStack.length = 0;#}
-                {#    animationStack.push(obj.grow.bind(obj));#}
-                {#    animationStack.push(obj.shrink.bind(obj));#}
-                {#    animationStack.push(obj.forward.bind(obj));#}
-                {#    animationStack.push(obj.setIncrement.bind(obj));#}
-                {#    animationStack.push(obj.forward.bind(obj));#}
-                {#    animationStack.push(obj.turnRight.bind(obj));#}
-                {#    animationStack.push(obj.timeup.bind(obj));#}
-                {#    if(currentAnim === undefined){// only restart if animation is not running#}
-                {#        requestAnimationFrame(update);#}
-                {#    }#}
-                {#    startTime = undefined;#}
-                {#    currentAnim = undefined;#}
-                {# }#}
-                {#canvas.addEventListener("click",startAnim)#}
-                {##}
-                {#// main animation loop#}
-                {#function update(time){#}
-                {##}
-                {#    globalTime = time;  // set the global#}
-                {#    if(startTime === undefined){ // if not set then#}
-                {#        startTime = time;  // set start time#}
-                {#    }#}
-                {#    if(currentAnim === undefined){#}
-                {#        if(animationStack.length > 0){#}
-                {#            currentAnim = animationStack.shift();#}
-                {#        }#}
-                {#    }#}
-                {##}
-                {#    if(currentAnim === undefined){#}
-                {#        return;#}
-                {#    }#}
-                {##}
-                {#    // clear the screen#}
-                {#    ctx.clearRect(0,0,canvas.width,canvas.height);#}
-                {##}
-                {#    // call the animation function#}
-                {#    currentAnim();#}
-                {##}
-                {#    // draw the object#}
-                {#    obj.draw(ctx);#}
-                {##}
-                {#    // request next frame#}
-                {##}
-                {#    requestAnimationFrame(update);#}
-                {# }#}
-                {##}
-                {#// start it all happening#}
-                {#requestAnimationFrame(update);#}
-
-                {#ctx.beginPath();#}
-                {#ctx.arc(35, 35, 20, 0, Math.PI*2, false);#}
-                {#ctx.fillStyle = "green";#}
-                {#ctx.fill();#}
-                {#ctx.closePath();#}
-                {##}
-                {#var circle = document.getElementById("circle");#}
-                {#var cx = circle.getAttribute("cx");#}
-                {#cx = parseInt(cx.replace(/\D/g,'')) + 10;#}
-                {#circle.setAttribute("cx", cx);#}
-                {##}
-                {#let start = null;#}
-                {##}
-                {#function step(timestamp) {#}
-                {#  if (!start) start = timestamp;#}
-                {#    const progress = timestamp - start;#}
-                {#  drawMap()#}
-                {#  ctx.beginPath();#}
-                  {#ctx.clearRect(35, 35, 35, 35);#}
-                  {#ctx.globalCompositeOperation = 'destination-out'#}
-                {#  ctx.arc(35 + progress, 35, 20, 0, Math.PI*2, false);#}
-                {#  ctx.fillStyle = "green";#}
-                {#  ctx.fill();#}
-                  {#ctx.arc(100 + progress, 100, 100, 0, 2 * Math.PI, false);#}
-                {#  ctx.stroke();#}
-                {#  drawMap()#}
-                  {#ctx.globalCompositeOperation = 'destination-out'#}
-                {#    ctx.globalCompositeOperation = 'source-out'#}
-                {##}
-                {#  if (progress < 60) {#}
-                {#    window.requestAnimationFrame(step);#}
-                {#  } else {#}
-                {#      ctx.beginPath();#}
-                {#      ctx.globalCompositeOperation = 'source-over'#}
-                {#      ctx.arc(35 + progress, 35, 20, 0, Math.PI*2, false);#}
-                {#      ctx.fillStyle = "green";#}
-                      {#ctx.fillStyle = pattern;#}
-                {#      ctx.fill();#}
-                {#      ctx.closePath();#}
-                {#  }#}
-                {# }#}
-                {##}
-                {#window.requestAnimationFrame(step);#}
-                {##}
-                {#let start2 = null;#}
-                {#const progress = 60;#}
-                {#function stepY(timestamp) {#}
-                {#  if (!start2) start2 = timestamp;#}
-                {#    const progress2 = timestamp - start2;#}
-                {#  drawMap()#}
-                {#  ctx.beginPath();#}
-                  {#ctx.clearRect(35, 35, 35, 35);#}
-                  {#ctx.globalCompositeOperation = 'destination-out'#}
-                {#  ctx.arc(35 + progress, 35 + progress2, 20, 0, Math.PI*2, false);#}
-                {#  ctx.fillStyle = "green";#}
-                {#  ctx.fill();#}
-                  {#ctx.arc(100 + progress, 100, 100, 0, 2 * Math.PI, false);#}
-                {#  ctx.stroke();#}
-                {#  drawMap()#}
-                  {#ctx.globalCompositeOperation = 'destination-out'#}
-                {#    ctx.globalCompositeOperation = 'source-out'#}
-                {##}
-                {#  if (progress2 < 60) {#}
-                {#    window.requestAnimationFrame(stepY);#}
-                {#  } else {#}
-                {#      ctx.beginPath();#}
-                {#      ctx.globalCompositeOperation = 'source-over'#}
-                {#      ctx.arc(35 + progress, 35 + progress2, 20, 0, Math.PI*2, false);#}
-                {#      ctx.fillStyle = "green";#}
-                {#      ctx.fill();#}
-                {#      ctx.closePath();#}
-                {##}
-                {#      r.onload = function() {#}
-                {#        ctx.drawImage(r, 35, 35)#}
-                {#        ctx.globalCompositeOperation = 'source-over'#}
-                {#        ctx.stroke();#}
-                {#      };#}
-                {#  }#}
-                {# }#}
-                {##}
-                {#window.requestAnimationFrame(stepY);#}
-                {##}
-                {#r.onload = function() {#}
-                {#        ctx.beginPath();#}
-                {#        ctx.drawImage(r, 35, 35)#}
-                {#        ctx.globalCompositeOperation = 'source-over'#}
-                {#        ctx.closePath();#}
-                {#      };#}
-                {#ctx.beginPath();#}
-                {#ctx.drawImage(r, 35, 35)#}
-                {#ctx.globalCompositeOperation = 'source-over'#}
-                {#ctx.closePath();#}
-                {##}
-                {#function clearCircle(context,x,y,radius) {#}
-                {#    context.save();#}
-                {#    context.beginPath();#}
-                {#    context.arc(x, y, radius, 0, 2*Math.PI, true);#}
-                {#    context.clip();#}
-                {#    context.clearRect(x-radius,y-radius,radius*2,radius*2);#}
-                {#    context.restore();#}
-                {# }#}
-
-                {#clearCircle(ctx,60,0,20);#}
-
-                {#ctx.beginPath();#}
-                {#ctx.arc(35 + 60, 35, 20, 0, Math.PI*2, false);#}
-                {#ctx.fillStyle = "green";#}
-                {#ctx.fill();#}
-                {#ctx.closePath();#}
-
-                {#ctx.beginPath();#}
-                {#ctx.rect(40, 60, 50, 50);#}
-                {#ctx.fillStyle = "#FF0000";#}
-                {#ctx.fill();#}
-                {#ctx.closePath();#}
-                {##}
-                {#for (let i = 0; i < 10; i+5) {#}
-                {#    ctx.beginPath();#}
-                {#    ctx.rect(i, 60, 50, 50);#}
-                {#    ctx.fillStyle = "#FF0000";#}
-                {#    ctx.fill();#}
-                {#    ctx.closePath();#}
-                {# }#}
-                {##}
-                {#let i = 480#}
-                {#let j = 320#}
-                {#ctx.beginPath();#}
-                {#ctx.rect(110, 60, 50, 50);#}
-                {#ctx.fillStyle = "#FF0000";#}
-                {#ctx.fill();#}
-                {#ctx.closePath();#}
-                {##}
-                {#ctx.beginPath();#}
-                {#ctx.rect(180, 60, 50, 50);#}
-                {#ctx.fillStyle = "#FF0000";#}
-                {#ctx.fill();#}
-                {#ctx.closePath();#}
-                {##}
-                {#ctx.beginPath();#}
-                {#ctx.rect(250, 60, 50, 50);#}
-                {#ctx.fillStyle = "#FF0000";#}
-                {#ctx.fill();#}
-                {#ctx.closePath();#}
-                {##}
-                {#ctx.beginPath();#}
-                {#ctx.rect(320, 60, 50, 50);#}
-                {#ctx.fillStyle = "#FF0000";#}
-                {#ctx.fill();#}
-                {#ctx.closePath();#}
-                {##}
-                {#ctx.beginPath();#}
-                {#ctx.rect(390, 60, 50, 50);#}
-                {#ctx.fillStyle = "#FF0000";#}
-                {#ctx.fill();#}
-                {#ctx.closePath();#}
-
 
 
             </script>
