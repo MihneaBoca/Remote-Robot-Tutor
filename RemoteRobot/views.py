@@ -1,11 +1,8 @@
-import usb
 from django.shortcuts import render
-from django.contrib import messages
 import textx
 
 from RemoteRobot.models import Code
 from textx import metamodel_from_str
-import ev3_dc as ev3
 import socket
 
 
@@ -168,19 +165,19 @@ def simulator(request):
         ;
 
         ForwardCommand:
-            'Forward' f=FLOAT
+            'Forward' f=STRING?
         ;
 
         BackwardCommand:
-            'Backward' b=FLOAT
+            'Backward' b=STRING?
         ;
 
         TurnRightCommand:
-            'TurnRight' r=FLOAT
+            'TurnRight' r=STRING?
         ;
 
         TurnLeftCommand:
-            'TurnLeft' l=FLOAT
+            'TurnLeft' l=STRING?
         ;
 
         Comment:
@@ -208,22 +205,22 @@ def simulator(request):
                 for c in model.commands:
 
                     if c.__class__.__name__ == "ForwardCommand":
-                        result += 'f ' + str(float(c.f)) + ' '
+                        result += 'f'
                         # result += "my_vehicle.drive_straight(" + str(0.2*float(c.f)) + ")" + "\n"#"Forward " + str(c.f)
                         # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "BackwardCommand":
-                        result += 'b ' + str(float(c.b)) + ' '
+                        result += 'b'
                         # result += "my_vehicle.drive_straight(" + str(-0.2*float(c.b)) + ")" + "\n"
                         # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "TurnRightCommand":
-                        result += 'r ' + str(float(c.r)) + ' '
+                        result += 'r'
                         # result += "my_vehicle.drive_turn(" + str(float(c.r)) + ", 0.0)\n"
                         # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "TurnLeftCommand":
-                        result += 'l ' + str(float(c.l)) + ' '
+                        result += 'l'
                         # result += "my_vehicle.drive_turn(" + str(-float(c.l)) + ", 0.0)\n"
                         # resultStr = resultStr + result + "\n"
 

@@ -53,7 +53,9 @@
             </div>
 
         <div class="p-3">
-            <br /> <br />
+            <br />
+            <div class="row">
+                <div class="col">
             <textarea id="error_terminal" name="error_terminal" disabled>{{ output_terminal }}{{ message }}</textarea>
             <script>
                 var editor = CodeMirror.fromTextArea(document.getElementById('error_terminal'), {
@@ -62,9 +64,36 @@
                     lineWrapping: true,
                     theme: 'material',
                     mode: 'xml',
+                    readOnly: true,
                 });
                 editor.setSize(null, null);
             </script>
+                </div>
+                <div class="col">
+            <textarea id="instructions" name="instructions" disabled>Commands:
+
+Forward (number)
+
+TurnRight (degrees)
+
+TurnLeft (degrees)
+
+Backward (number)
+
+//Comment</textarea>
+            <script>
+                var editor = CodeMirror.fromTextArea(document.getElementById('instructions'), {
+                    lineNumbers: false,
+                    gutter: true,
+                    lineWrapping: true,
+                    theme: 'material',
+                    mode: 'xml',
+                    readOnly: true,
+                });
+                editor.setSize(null, null);
+            </script>
+                </div>
+            </div>
         </div>
 
         </div>

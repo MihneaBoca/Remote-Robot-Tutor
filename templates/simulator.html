@@ -42,17 +42,6 @@
                 let wait = false;
                 var queue = [];
 
-                {#var robot = new Image();#}
-                {#var src = "{% static "robot.png" %}"#}
-                {#robot.src = "{% static "robot.png" %}";#}
-                {#robot.onload = function(){#}
-                {#    var pattern = ctx.createPattern(this, "repeat");#}
-                {#    ctx.fillStyle = pattern;#}
-                {#    ctx.arc(35, 35, 20, 0, Math.PI*2, false);#}
-                {#    ctx.fill();#}
-                {# };#}
-
-
                 var r = new Image();
                   r.onload = function() {
                     ctx.drawImage(r, 10, 10);
@@ -661,7 +650,9 @@
             <button class="btn btn-info" type="Submit" id="id_submit_code" name="submit_code">Run Code</button>
 
         <div class="p-3">
-            <br /> <br />
+            <br />
+            <div class="row">
+                <div class="col">
             <textarea id="error_terminal" name="error_terminal" disabled>{{ output_terminal }}{{ message }}</textarea>
             <script>
                 var editor = CodeMirror.fromTextArea(document.getElementById('error_terminal'), {
@@ -670,9 +661,36 @@
                     lineWrapping: true,
                     theme: 'material',
                     mode: 'xml',
+                    readOnly: true,
                 });
                 editor.setSize(null, null);
             </script>
+                </div>
+                <div class="col">
+            <textarea id="instructions" name="instructions" disabled>Commands:
+
+Forward
+
+TurnRight
+
+TurnLeft
+
+Backward
+
+//Comment</textarea>
+            <script>
+                var editor = CodeMirror.fromTextArea(document.getElementById('instructions'), {
+                    lineNumbers: false,
+                    gutter: true,
+                    lineWrapping: true,
+                    theme: 'material',
+                    mode: 'xml',
+                    readOnly: true,
+                });
+                editor.setSize(null, null);
+            </script>
+                </div>
+            </div>
         </div>
 
         </div>
