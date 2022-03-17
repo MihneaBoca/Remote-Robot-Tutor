@@ -31,12 +31,80 @@
         <form action="" onsubmit="" method="POST">
             {% csrf_token %}
 
+            <div class="row">
             <canvas id="myCanvas" width="480" height="480"></canvas>
+
+            <p id="victory" style="font-family:courier; font-size: 25px; text-align: center;text-align-all: center;"></p>
+            </div>
+
+
+        <div class="p-3">
+            <textarea id="terminal" name="terminal" placeholder="/Enter Your Code..." >{{ enter_code }}{{ code }}</textarea>
+            <script>
+                var editor = CodeMirror.fromTextArea(document.getElementById('terminal'), {
+                    lineNumbers: true,
+                    gutter: true,
+                    lineWrapping: true,
+                    theme: 'material',
+                    mode: 'xml',
+                });
+                editor.setSize(null, null);
+            </script>
+        </div>
+
+        <div class="p-3">
+            <button class="btn btn-info" type="Submit" id="id_submit_code" name="submit_code">Run Code</button>
+
+        <div class="p-3">
+            <br />
+            <div class="row">
+                <div class="col">
+            <textarea id="error_terminal" name="error_terminal" disabled>{{ output_terminal }}{{ message }}</textarea>
+            <script>
+                var editor = CodeMirror.fromTextArea(document.getElementById('error_terminal'), {
+                    lineNumbers: false,
+                    gutter: true,
+                    lineWrapping: true,
+                    theme: 'material',
+                    mode: 'xml',
+                    readOnly: true,
+                });
+                editor.setSize(null, null);
+            </script>
+                </div>
+                <div class="col">
+            <textarea id="instructions" name="instructions" disabled>Commands:
+
+Forward
+
+TurnRight
+
+TurnLeft
+
+Backward
+
+//Comment</textarea>
+
+            <script>
+                var editor = CodeMirror.fromTextArea(document.getElementById('instructions'), {
+                    lineNumbers: false,
+                    gutter: true,
+                    lineWrapping: true,
+                    theme: 'material',
+                    mode: 'xml',
+                    readOnly: true,
+                });
+                editor.setSize(null, null);
+            </script>
+                </div>
+            </div>
+        </div>
 
             <script>
                 var canvas = document.getElementById("myCanvas");
                 var ctx = canvas.getContext("2d");
-                var img = document.getElementById("robo_image")
+                var img = document.getElementById("robo_image");
+                var terminal = document.getElementById("victory");
 
                 let code ="{{ result }}";
                 let wait = false;
@@ -612,10 +680,21 @@
 
 
                             }
-                            if (queue.length === 0) {
+                            if (queue.length === 0 && increment === 70) {
                                 if (Math.abs(yellowX-rx)<10 && Math.abs(yellowY-ry)<10 && done === false) {
-                                    console.log("You have reached the destination!");
                                     done = true;
+                                    console.log("You have reached the destination!");
+                                    terminal.value = "You have reached the destination!";
+                                    terminal.innerText = "You have reached the destination!";
+                                    terminal.innerHTML = "You have reached the destination!";
+                                } else {
+                                    if (done === false) {
+                                        done = true;
+                                        console.log("You have not reached the destination...");
+                                        terminal.value = "You have not reached the destination...";
+                                        terminal.innerText = "You have not reached the destination...";
+                                        terminal.innerHTML = "You have not reached the destination...";
+                                    }
                                 }
                             }
                             {#console.log(rx,ry);#}
@@ -632,66 +711,6 @@
 
 
             </script>
-        <div class="p-3">
-            <textarea id="terminal" name="terminal" placeholder="/Enter Your Code..." >{{ enter_code }}{{ code }}</textarea>
-            <script>
-                var editor = CodeMirror.fromTextArea(document.getElementById('terminal'), {
-                    lineNumbers: true,
-                    gutter: true,
-                    lineWrapping: true,
-                    theme: 'material',
-                    mode: 'xml',
-                });
-                editor.setSize(null, null);
-            </script>
-        </div>
-
-        <div class="p-3">
-            <button class="btn btn-info" type="Submit" id="id_submit_code" name="submit_code">Run Code</button>
-
-        <div class="p-3">
-            <br />
-            <div class="row">
-                <div class="col">
-            <textarea id="error_terminal" name="error_terminal" disabled>{{ output_terminal }}{{ message }}</textarea>
-            <script>
-                var editor = CodeMirror.fromTextArea(document.getElementById('error_terminal'), {
-                    lineNumbers: false,
-                    gutter: true,
-                    lineWrapping: true,
-                    theme: 'material',
-                    mode: 'xml',
-                    readOnly: true,
-                });
-                editor.setSize(null, null);
-            </script>
-                </div>
-                <div class="col">
-            <textarea id="instructions" name="instructions" disabled>Commands:
-
-Forward
-
-TurnRight
-
-TurnLeft
-
-Backward
-
-//Comment</textarea>
-            <script>
-                var editor = CodeMirror.fromTextArea(document.getElementById('instructions'), {
-                    lineNumbers: false,
-                    gutter: true,
-                    lineWrapping: true,
-                    theme: 'material',
-                    mode: 'xml',
-                    readOnly: true,
-                });
-                editor.setSize(null, null);
-            </script>
-                </div>
-            </div>
-        </div>
 
         </div>
     </div>
