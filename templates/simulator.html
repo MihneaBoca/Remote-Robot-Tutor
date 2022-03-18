@@ -28,17 +28,23 @@
     </nav>
 
     <div class="container">
-        <form action="" onsubmit="" method="POST">
-            {% csrf_token %}
+
 
             <div class="row">
-            <canvas id="myCanvas" width="480" height="480"></canvas>
+            <canvas id="myCanvas" width="410" height="410"></canvas>
 
             <p id="victory" style="font-family:courier; font-size: 25px; text-align: center;text-align-all: center;"></p>
             </div>
 
+        <button class="btn btn-info" id="id_reset_map" name="reset_map" onclick="resetMap()">Reset Map</button>
+
+        <form action="" onsubmit="" method="POST">
+            {% csrf_token %}
 
         <div class="p-3">
+
+
+
             <textarea id="terminal" name="terminal" placeholder="/Enter Your Code..." >{{ enter_code }}{{ code }}</textarea>
             <script>
                 var editor = CodeMirror.fromTextArea(document.getElementById('terminal'), {
@@ -100,7 +106,11 @@ Backward
             </div>
         </div>
 
+
             <script>
+
+
+
                 var canvas = document.getElementById("myCanvas");
                 var ctx = canvas.getContext("2d");
                 var img = document.getElementById("robo_image");
@@ -108,11 +118,15 @@ Backward
 
                 let code ="{{ result }}";
                 let wait = false;
-                var queue = [];
+                let queue = [];
 
-                var r = new Image();
+                let initialX = 10;
+                let initialY = 10;
+
+
+                let r = new Image();
                   r.onload = function() {
-                    ctx.drawImage(r, 10, 10);
+                    ctx.drawImage(r, initialX, initialY);
                     ctx.beginPath();
                     ctx.stroke();
                   };
@@ -128,6 +142,40 @@ Backward
                 let minEnd = 10;
                 let maxEnd =350;
                 let done = false;
+
+                function resetMap() {
+
+                  done = false;
+                  queue = [];
+                  wait = false;
+                  code = "";
+                  ctx.clearRect(0,0,innerWidth,innerHeight);
+                  rx = initialX;
+                  ry = initialY;
+
+
+
+                  r.src = "{% static "robot-east.png" %}";
+
+                    ctx.drawImage(r, initialX, initialY);
+                    ctx.beginPath();
+                    ctx.stroke();
+                  drawMap();
+                  {#var z = new Image();#}
+                  {#z.onload = function() {#}
+                  {#  ctx.drawImage(r, initialX, initialY);#}
+                  {#  ctx.beginPath();#}
+                  {#  ctx.stroke();#}
+                  {# };#}
+                  {#z.src = "{% static "robot-east.png" %}";#}
+
+                  terminal.value = "";
+                  terminal.innerText = "";
+                  terminal.innerHTML = "";
+
+                  console.log("reset map")
+
+                }
 
 
                 function drawMap() {
@@ -647,30 +695,31 @@ Backward
                 let front = true;
 
                 function move() {
-                    requestAnimationFrame(move);
-                    if (wait === false) {
-                        wait = true;
+                    if (done === false) {
+                        requestAnimationFrame(move);
+                        if (wait === false) {
+                            wait = true;
 
-                        let e = queue.shift();
-                        if(e === 'f') {
+                            let e = queue.shift();
+                            if (e === 'f') {
                                 front = true;
                                 increment = 1;
                                 console.log('for')
-                                    forward();
+                                forward();
                                 {#console.log(rx,ry)#}
                                 {#if (increment === 70) {increment = 1}#}
 
 
                             }
-                            if(e === 'r') {
+                            if (e === 'r') {
                                 turnRight();
                             }
 
-                            if(e === 'l') {
+                            if (e === 'l') {
                                 turnLeft();
                             }
 
-                            if(e === 'b') {
+                            if (e === 'b') {
                                 front = false;
                                 increment = 1;
                                 console.log('back');
@@ -681,7 +730,7 @@ Backward
 
                             }
                             if (queue.length === 0 && increment === 70) {
-                                if (Math.abs(yellowX-rx)<10 && Math.abs(yellowY-ry)<10 && done === false) {
+                                if (Math.abs(yellowX - rx) < 10 && Math.abs(yellowY - ry) < 10 && done === false) {
                                     done = true;
                                     console.log("You have reached the destination!");
                                     terminal.value = "You have reached the destination!";
@@ -701,6 +750,7 @@ Backward
                             {#console.log(queue.length);#}
 
 
+                        }
                     }
 
                 }
