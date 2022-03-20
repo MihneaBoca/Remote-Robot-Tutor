@@ -327,7 +327,7 @@ def simulator(request):
         ;
 
         Command:
-            ForwardCommand | BackwardCommand | TurnRightCommand | TurnLeftCommand
+            ForwardCommand | BackwardCommand | TurnRightCommand | TurnLeftCommand | RepeatCommand | EndRepeatCommand
         ;
 
         ForwardCommand:
@@ -344,6 +344,14 @@ def simulator(request):
 
         TurnLeftCommand:
             'TurnLeft' l=STRING?
+        ;
+        
+        RepeatCommand:
+            'Repeat' w=INT
+        ;
+        
+        EndRepeatCommand:
+            'End' l=STRING?
         ;
 
         Comment:
@@ -392,6 +400,12 @@ def simulator(request):
                         # result += "my_vehicle.drive_turn(" + str(-float(c.l)) + ", 0.0)\n"
                         # resultStr = resultStr + result + "\n"
 
+                    elif c.__class__.__name__ == "RepeatCommand":
+                        result += 'w' + str(int(c.w))
+
+                    elif c.__class__.__name__ == "EndRepeatCommand":
+                        result += 'e'
+
                     else:
                         print("Invalid")
                 return result
@@ -403,18 +417,49 @@ def simulator(request):
         except AttributeError:
             result = ''
 
+        count_w = 0
+        count_e = 0
+
+        for i in result:
+            if i == 'w':
+                count_w += 1
+            if i == 'e':
+                count_e += 1
+        if count_w != count_e:
+            message = 'The number of Repeat and End needs to be the same'
+            return render(request, 'simulator.html',
+                          {'code': code, 'message': message, 'initialX': initialX, 'initialY': initialY,
+                           'yellowX': yellowX, 'yellowY': yellowY, 'red_x': red_x, 'red_y': red_y,
+                           'red_size': red_size})
+
+        print(count_w)
+        while count_w != 0:
+            w = result.rfind('w')
+            e = w
+            while result[e] != 'e':
+                e += 1
+            number = ''
+            i = w+1
+            print(result[i])
+            while result[i].isdigit():
+                number += result[i]
+                i += 1
+            print(number)
+            commands = result[i:e]
+            print(commands)
+            repeats = int(number)
+            repeated_commands = ""
+            while repeats > 0:
+                print(commands)
+                repeated_commands += commands
+                repeats -= 1
+            print(commands)
+            result = result[:w] + repeated_commands + result[e+1:]
+            count_w -= 1
+
         return render(request, 'simulator.html',
                       {'code': code, 'message': message, 'result': result, 'initialX': initialX, 'initialY': initialY,
                        'yellowX': yellowX, 'yellowY': yellowY, 'red_x': red_x, 'red_y': red_y, 'red_size': red_size})
-
-    coord = [10, 78, 146, 214, 282, 350]
-
-    initialX = request.session.get('initialX')
-    if initialX is None:
-        initialX = coord[random.randrange(len(coord))]
-    initialY = request.session.get('initialY')
-    if initialY is None:
-        initialY = coord[random.randrange(len(coord))]
 
     return render(request, 'simulator.html',
                   {'enter_code': enter_code, 'output_terminal': output_terminal, 'result': result,
