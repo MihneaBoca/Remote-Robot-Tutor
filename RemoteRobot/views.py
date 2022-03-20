@@ -30,7 +30,7 @@ def index(request):
         ;
 
         Command:
-            ForwardCommand | BackwardCommand | TurnRightCommand | TurnLeftCommand
+            ForwardCommand | BackwardCommand | TurnRightCommand | TurnLeftCommand | RepeatCommand | EndRepeatCommand
         ;
 
         ForwardCommand:
@@ -48,7 +48,14 @@ def index(request):
         TurnLeftCommand:
             'TurnLeft' l=FLOAT
         ;
-
+        
+        RepeatCommand:
+            'Repeat' w=INT
+        ;
+        
+        EndRepeatCommand:
+            'End' e=STRING?
+        ;
         Comment:
             /\/\/.*$/
         ;
@@ -93,6 +100,12 @@ def index(request):
                         # result += "my_vehicle.drive_turn(" + str(-float(c.l)) + ", 0.0)\n"
                         # resultStr = resultStr + result + "\n"
 
+                    elif c.__class__.__name__ == "RepeatCommand":
+                        result += 'w ' + str(int(c.w)) + '\n'
+
+                    elif c.__class__.__name__ == "EndRepeatCommand":
+                        result += 'e \n'
+
                     else:
                         print("Invalid")
                 return result
@@ -108,12 +121,60 @@ def index(request):
         if result == '':
             result = 'Comment'
 
+        count_w = 0
+        count_e = 0
+
+        for i in result:
+            if i == 'w':
+                count_w += 1
+            if i == 'e':
+                count_e += 1
+        if count_w != count_e:
+            message = 'The number of Repeat and End needs to be the same'
+            return render(request, 'index.html',
+                          {'code': code, 'password': password, 'message': message})
+        #print(result)
+        if count_w != 0:
+            result_list = result.splitlines()
+            #print('result_list')
+            #print(result_list)
+            while count_w > 0:
+                w = len(result_list)-1
+                while not result_list[w].__contains__('w'):
+                    w -= 1
+                #print(result_list[w])
+                e = w
+                while not result_list[e].__contains__('e'):
+                    e += 1
+                #print(result_list[e])
+                repeats = int(result_list[w][2:])
+                #print(repeats)
+                commands = result_list[w+1:e]
+                #print(commands)
+                repeated_commands = []
+                while repeats > 0:
+                    #print(commands)
+                    for i in commands:
+                        repeated_commands.append(i)
+                    repeats -= 1
+                result_list = result_list[:w] + repeated_commands + result_list[e+1:]
+                count_w -= 1
+            result = ""
+            for i in result_list:
+                result += i + '\n'
+        #print("result")
+        #print(result)
+
+        # return render(request, 'index.html',
+        #               {'code': code, 'password': password, 'message': message})
+
+
         HOST = '46.101.78.94'  # The server's hostname or IP address
         PORT = 8010  # The port used by the server
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             try:
-                s.settimeout(30)
+                s.settimeout(60)
                 s.connect((HOST, PORT))
                 data = s.recv(1024)
 
@@ -156,7 +217,7 @@ def simulator(request):
 
     coord = [10, 78, 146, 214, 282, 350]
 
-    print(request.session.keys())
+    #print(request.session.keys())
 
     # del request.session['initialA']
     # del request.session['initialX']
@@ -164,7 +225,7 @@ def simulator(request):
     # del request.session['yellowX']
     # del request.session['yellowY']
 
-    print(len(coord) - coord.index(int(10)))
+    #print(len(coord) - coord.index(int(10)))
 
     for key in request.session.keys():
         print(request.session[key])
@@ -239,17 +300,17 @@ def simulator(request):
             red_y.append(new_red)
         request.session["red_y"] = red_y
 
-    print(request.session.keys())
+    #print(request.session.keys())
 
-    print(red_x)
-    print(red_y)
+    #print(red_x)
+    #print(red_y)
 
-    print(coord.index(int(initialX)) < len(coord) / 2)
+    #print(coord.index(int(initialX)) < len(coord) / 2)
 
     if request.method == 'POST':
 
-        for i in request.POST:
-            print(i)
+        # for i in request.POST:
+        #     print(i)
 
         if 'new_map' in request.POST:
             red_size = int(request.POST['red_squares'])
@@ -351,7 +412,7 @@ def simulator(request):
         ;
         
         EndRepeatCommand:
-            'End' l=STRING?
+            'End' e=STRING?
         ;
 
         Comment:
@@ -432,7 +493,7 @@ def simulator(request):
                            'yellowX': yellowX, 'yellowY': yellowY, 'red_x': red_x, 'red_y': red_y,
                            'red_size': red_size})
 
-        print(count_w)
+        #print(count_w)
         while count_w != 0:
             w = result.rfind('w')
             e = w
@@ -440,20 +501,20 @@ def simulator(request):
                 e += 1
             number = ''
             i = w+1
-            print(result[i])
+            #print(result[i])
             while result[i].isdigit():
                 number += result[i]
                 i += 1
-            print(number)
+            #print(number)
             commands = result[i:e]
-            print(commands)
+            #print(commands)
             repeats = int(number)
             repeated_commands = ""
             while repeats > 0:
-                print(commands)
+                #print(commands)
                 repeated_commands += commands
                 repeats -= 1
-            print(commands)
+            #print(commands)
             result = result[:w] + repeated_commands + result[e+1:]
             count_w -= 1
 
