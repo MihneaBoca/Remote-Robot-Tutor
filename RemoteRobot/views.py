@@ -19,6 +19,12 @@ def index(request):
             Code.objects.filter(password=request.POST['password']).delete()
         code = request.POST['terminal']
         password = request.POST['password']
+
+        if password == '':
+            message = 'You must provide a robot passcode'
+            return render(request, 'index.html',
+                          {'code': code, 'password': password, 'message': message})
+
         new_code = Code.objects.get_or_create(code=code, password=password)[0]
         print(code)
         message = 'Done.'
@@ -119,7 +125,7 @@ def index(request):
             result = ''
 
         if result == '':
-            result = 'Comment'
+            result = '/'
 
         count_w = 0
         count_e = 0
