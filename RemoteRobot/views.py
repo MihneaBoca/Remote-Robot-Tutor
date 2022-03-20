@@ -1,10 +1,14 @@
 from django.shortcuts import render
 import textx
+import random
 
 from RemoteRobot.models import Code
 from textx import metamodel_from_str
 import socket
 
+
+# initialX = 10
+# initialY = 10
 
 def index(request):
     enter_code = "//Enter your code here..."
@@ -148,11 +152,173 @@ def simulator(request):
     enter_code = "//Enter your code here..."
     output_terminal = ""
     result = ""
+    red_size = 3
+
+    coord = [10, 78, 146, 214, 282, 350]
+
+    print(request.session.keys())
+
+    # del request.session['initialA']
+    # del request.session['initialX']
+    # del request.session['initialY']
+    # del request.session['yellowX']
+    # del request.session['yellowY']
+
+    print(len(coord) - coord.index(int(10)))
+
+    for key in request.session.keys():
+        print(request.session[key])
+
+    if 'initialX' in request.session.keys():
+        initialX = request.session["initialX"]
+    else:
+        request.session['initialX'] = coord[random.randrange(len(coord))]
+        initialX = request.session["initialX"]
+
+    if 'initialY' in request.session.keys():
+        initialY = request.session["initialY"]
+    else:
+        request.session['initialY'] = coord[random.randrange(len(coord))]
+        initialY = request.session["initialY"]
+
+    if 'yellowX' in request.session.keys():
+        yellowX = request.session["yellowX"]
+    else:
+        if coord.index(int(initialX)) < len(coord) / 2:
+            # request.session['yellowX'] = coord[len(coord)-coord.index(int(initialX))-1]
+            request.session['yellowX'] = coord[len(coord) - 1]
+        else:
+            request.session['yellowX'] = coord[0]
+        yellowX = request.session["yellowX"]
+
+    if 'yellowY' in request.session.keys():
+        yellowY = request.session["yellowY"]
+    else:
+        # request.session['yellowY'] = coord[len(coord)-coord.index(int(initialY))-1]
+        # yellowY = request.session["yellowY"]
+        if coord.index(int(initialY)) < len(coord) / 2:
+            request.session['yellowY'] = coord[len(coord) - 1]
+        else:
+            request.session['yellowY'] = coord[0]
+        yellowY = request.session["yellowY"]
+
+    if 'red_x' in request.session.keys():
+        red_x = request.session["red_x"]
+    else:
+        red_x = []
+        for i in range(red_size):
+            red_x.append(coord[random.randrange(len(coord))])
+        request.session["red_x"] = red_x
+
+    if 'red_y' in request.session.keys():
+        red_y = request.session["red_y"]
+    else:
+        red_y = []
+        for i in range(red_size):
+            repeat = True
+            while repeat:
+                repeat = False
+                new_red = coord[random.randrange(len(coord))]
+                if red_x[i] == initialX:
+                    while new_red == initialY:
+                        new_red = coord[random.randrange(len(coord))]
+                        if red_x[i] == yellowX:
+                            while new_red == yellowY:
+                                new_red = coord[random.randrange(len(coord))]
+                if red_x[i] == yellowX:
+                    while new_red == yellowY:
+                        new_red = coord[random.randrange(len(coord))]
+                        if red_x[i] == initialX:
+                            while new_red == initialY:
+                                new_red = coord[random.randrange(len(coord))]
+                for j in range(len(red_y)):
+                    if i != j:
+                        if red_x[i] == red_x[j]:
+                            if red_y[j] == new_red:
+                                repeat = True
+            red_y.append(new_red)
+        request.session["red_y"] = red_y
+
+    print(request.session.keys())
+
+    print(red_x)
+    print(red_y)
+
+    print(coord.index(int(initialX)) < len(coord) / 2)
 
     if request.method == 'POST':
+
+        for i in request.POST:
+            print(i)
+
+        if 'new_map' in request.POST:
+            red_size = int(request.POST['red_squares'])
+
+            initialX = coord[random.randrange(len(coord))]
+            request.session['initialX'] = initialX
+            # initialX = request.session["initialX"]
+
+            initialY = coord[random.randrange(len(coord))]
+            request.session['initialY'] = initialY
+            # initialY = request.session["initialY"]
+
+            if coord.index(int(initialX)) < len(coord) / 2:
+                request.session['yellowX'] = coord[len(coord) - 1]
+            else:
+                request.session['yellowX'] = coord[0]
+            yellowX = request.session["yellowX"]
+
+            if coord.index(int(initialY)) < len(coord) / 2:
+                request.session['yellowY'] = coord[len(coord) - 1]
+            else:
+                request.session['yellowY'] = coord[0]
+            yellowY = request.session["yellowY"]
+
+            red_x = []
+            for i in range(red_size):
+                red_x.append(coord[random.randrange(len(coord))])
+            request.session["red_x"] = red_x
+
+            red_y = []
+            for i in range(red_size):
+                repeat = True
+                while repeat:
+                    repeat = False
+                    new_red = coord[random.randrange(len(coord))]
+                    if red_x[i] == initialX:
+                        while new_red == initialY:
+                            new_red = coord[random.randrange(len(coord))]
+                            if red_x[i] == yellowX:
+                                while new_red == yellowY:
+                                    new_red = coord[random.randrange(len(coord))]
+                    if red_x[i] == yellowX:
+                        while new_red == yellowY:
+                            new_red = coord[random.randrange(len(coord))]
+                            if red_x[i] == initialX:
+                                while new_red == initialY:
+                                    new_red = coord[random.randrange(len(coord))]
+                    for j in range(len(red_y)):
+                        if i != j:
+                            if red_x[i] == red_x[j]:
+                                if red_y[j] == new_red:
+                                    repeat = True
+                red_y.append(new_red)
+            request.session["red_y"] = red_y
+
+            return render(request, 'simulator.html',
+                          {'enter_code': enter_code, 'output_terminal': output_terminal, 'result': result,
+                           'initialX': initialX, 'initialY': initialY, 'yellowX': yellowX, 'yellowY': yellowY,
+                           'red_x': red_x, 'red_y': red_y, 'red_size': red_size})
+
         code = request.POST['terminal']
         print(code)
         message = 'Done.'
+
+        # initialX = request.session['initialX']
+        # if initialX is None:
+        #     request.session['initialX'] = random.randrange(len(coord))
+        # initialX = request.session['initialX']
+        # print(initialX)
 
         grammar = '''
 
@@ -192,7 +358,9 @@ def simulator(request):
         except (textx.exceptions.TextXSyntaxError, AttributeError):
             message = 'Expected comment or Forward, Backward, TurnRight or TurnLeft commands.'
             return render(request, 'simulator.html',
-                          {'code': code, 'message': message})
+                          {'code': code, 'message': message, 'initialX': initialX, 'initialY': initialY,
+                           'yellowX': yellowX, 'yellowY': yellowY, 'red_x': red_x, 'red_y': red_y,
+                           'red_size': red_size})
 
         class Robottutor(object):
 
@@ -236,7 +404,19 @@ def simulator(request):
             result = ''
 
         return render(request, 'simulator.html',
-                      {'code': code, 'message': message, 'result': result})
+                      {'code': code, 'message': message, 'result': result, 'initialX': initialX, 'initialY': initialY,
+                       'yellowX': yellowX, 'yellowY': yellowY, 'red_x': red_x, 'red_y': red_y, 'red_size': red_size})
+
+    coord = [10, 78, 146, 214, 282, 350]
+
+    initialX = request.session.get('initialX')
+    if initialX is None:
+        initialX = coord[random.randrange(len(coord))]
+    initialY = request.session.get('initialY')
+    if initialY is None:
+        initialY = coord[random.randrange(len(coord))]
 
     return render(request, 'simulator.html',
-                  {'enter_code': enter_code, 'output_terminal': output_terminal, 'result': result})
+                  {'enter_code': enter_code, 'output_terminal': output_terminal, 'result': result,
+                   'initialX': initialX, 'initialY': initialY, 'yellowX': yellowX, 'yellowY': yellowY,
+                   'red_x': red_x, 'red_y': red_y, 'red_size': red_size})

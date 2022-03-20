@@ -36,7 +36,27 @@
             <p id="victory" style="font-family:courier; font-size: 25px; text-align: center;text-align-all: center;"></p>
             </div>
 
-        <button class="btn btn-info" id="id_reset_map" name="reset_map" onclick="resetMap()">Reset Map</button>
+
+
+        <div class="row">
+
+        <button class="btn btn-info" id="reset_map" name="reset_map" onclick="resetMap()" style="margin-left: 10px; margin-right: 10px; margin-top: 2px">Reset Map</button>
+
+        <form action="" onsubmit="" method="POST">
+            {% csrf_token %}
+
+            <button class="btn btn-info" id="id_new_map" name="new_map" style="margin-left: 10px; margin-top: 2px">New Map</button>
+
+            <label for="red_squares" style="margin-left: 100px;font-weight:bold; font-family:courier">Number of red squares:</label>
+            <select id="red_squares" name="red_squares" style="font-family:courier">
+                 <option value="3" {% if red_size == 3 %}selected{% endif %}>3</option>
+                 <option value="4" {% if red_size == 4 %}selected{% endif %}>4</option>
+                 <option value="5" {% if red_size == 5 %}selected{% endif %}>5</option>
+             </select>
+        </form>
+        </div>
+
+        <br>
 
         <form action="" onsubmit="" method="POST">
             {% csrf_token %}
@@ -120,9 +140,26 @@ Backward
                 let wait = false;
                 let queue = [];
 
-                let initialX = 10;
-                let initialY = 10;
+                function randomIntFromInterval(min, max) { // min and max included
+                  return Math.floor(Math.random() * (max - min + 1) + min)
+                }
 
+                console.log("{{ initialX }}")
+                console.log("{{ initialY }}")
+
+                coord = [10, 78, 146, 214, 282, 350];
+
+                let rndX = randomIntFromInterval(0, coord.length-1);
+                let rndY = randomIntFromInterval(0, coord.length-1);
+
+                {#let initialX = 10;#}
+                {#let initialY = 10;#}
+
+                {#let initialX = coord[rndX];#}
+                {#let initialY = coord[rndY];#}
+
+                let initialX = parseInt("{{ initialX }}");
+                let initialY = parseInt("{{ initialY }}");
 
                 let r = new Image();
                   r.onload = function() {
@@ -133,15 +170,38 @@ Backward
                   r.src = "{% static "robot-east.png" %}";
 
 
-                let yellowX = 350;
-                let yellowY = 350;
+                {#let yellowX = 350;#}
+                {#let yellowY = 350;#}
 
-                let redX = [78, 78, 214];
-                let redY = [10, 214, 146];
+                let yellowX = parseInt("{{ yellowX }}");
+                let yellowY = parseInt("{{ yellowY }}");
+
+                {#console.log("{{ red_x }}")#}
+
+                {#let xRed = {{ red_x }};#}
+
+                {#console.log(yellowX, yellowY)#}
+                {##}
+                {#let result = [];#}
+                {##}
+                {#for (let i = 0; i < xRed.length; i++) {#}
+                {#    console.log(typeof xRed[i])#}
+                {#    result.push(parseInt(xRed[i]));#}
+                {# }#}
+
+                {#console.log(result)#}
+
+                {#let redX = [78, 78, 214];#}
+                {#let redY = [10, 214, 146];#}
+
+                let redX = {{ red_x }};
+                let redY = {{ red_y }};
 
                 let minEnd = 10;
                 let maxEnd =350;
                 let done = false;
+
+
 
                 function resetMap() {
 
@@ -208,8 +268,8 @@ Backward
                 }
 
                 drawMap()
-                let rx = 10;
-                let ry = 10;
+                let rx = initialX;
+                let ry = initialY;
                 let direction = "east";
                 let increment = 1;
 
@@ -265,6 +325,11 @@ Backward
                     ctx.clearRect(0,0,innerWidth,innerHeight)
                     drawMap()
 
+                    {#console.log(typeof(rx), ry, direction)#}
+                    {#console.log(front)#}
+                    {#let rn = rx+1#}
+                    {#console.log(rn, ry, direction)#}
+
                     ctx.drawImage(r, rx, ry);
                     ctx.beginPath();
                     ctx.stroke();
@@ -275,20 +340,35 @@ Backward
                     if (front === true) {
                         if (direction === "east") {
                         if (increment < 70) {
+                            console.log(increment);
+                            console.log(rx, ry);
                             if (rx < maxEnd) {
+                                console.log(rx);
+                                console.log(redY)
                                 for (let i= 0; i<redY.length; i++){
+                                            console.log(redY[i])
                                             if (Math.abs(redY[i]-ry)<10) {
-                                                redBlock = true;
-                                            }
-                                        }
-                                        if (redBlock) {
-                                            redBlock = false;
-                                            for (let i= 0; i<redX.length; i++){
-                                                if (Math.abs(redX[i]-rx)<80) {
+                                                {#console.log(redY[i],ry)#}
+                                                {#console.log(Math.abs(redY[i]-ry)<10)#}
+                                                if (Math.abs(redX[i]-rx)<68) {
                                                     redBlock = true;
                                                 }
+
                                             }
                                         }
+                                {#console.log(redBlock);#}
+                                {#        if (redBlock) {#}
+                                {#            redBlock = false;#}
+                                {#            console.log(redX)#}
+                                {#            for (let i= 0; i<redX.length; i++){#}
+                                {#                if (Math.abs(redX[i]-rx)<68) {#}
+                                {#                    console.log(redX[i])#}
+                                {#                    console.log(Math.abs(redX[i]-rx)<68)#}
+                                {#                    redBlock = true;#}
+                                {#                }#}
+                                {#            }#}
+                                {#        }#}
+                                        console.log(redBlock);
                                 if (redBlock === false) {
                                     rx += 1;
                                 } else {
@@ -305,17 +385,20 @@ Backward
                                     if (ry < maxEnd) {
                                         for (let i= 0; i<redX.length; i++){
                                             if (Math.abs(redX[i]-rx)<10) {
-                                                redBlock = true;
-                                            }
-                                        }
-                                        if (redBlock) {
-                                            redBlock = false;
-                                            for (let i= 0; i<redY.length; i++){
-                                                if (Math.abs(redY[i]-ry)<80) {
+                                                if (Math.abs(redY[i]-ry)<68) {
                                                     redBlock = true;
                                                 }
+                                                {#redBlock = true;#}
                                             }
                                         }
+                                        {#if (redBlock) {#}
+                                        {#    redBlock = false;#}
+                                        {#    for (let i= 0; i<redY.length; i++){#}
+                                        {#        if (Math.abs(redY[i]-ry)<80) {#}
+                                        {#            redBlock = true;#}
+                                        {#        }#}
+                                        {#    }#}
+                                        {# }#}
                                         if (redBlock === false) {
                                             ry += 1;
                                         } else {
@@ -333,17 +416,20 @@ Backward
                                         if (rx > minEnd) {
                                             for (let i= 0; i<redY.length; i++){
                                                 if (Math.abs(redY[i]-ry)<10) {
-                                                    redBlock = true;
-                                                }
-                                            }
-                                            if (redBlock) {
-                                                redBlock = false;
-                                                for (let i= 0; i<redX.length; i++){
-                                                    if (Math.abs(redX[i]-rx)<80) {
+                                                    if (Math.abs(redX[i]-rx)<68) {
                                                         redBlock = true;
                                                     }
+                                                    {#redBlock = true;#}
                                                 }
                                             }
+                                            {#if (redBlock) {#}
+                                            {#    redBlock = false;#}
+                                            {#    for (let i= 0; i<redX.length; i++){#}
+                                            {#        if (Math.abs(redX[i]-rx)<80) {#}
+                                            {#            redBlock = true;#}
+                                            {#        }#}
+                                            {#    }#}
+                                            {# }#}
                                     if (redBlock === false) {
                                         rx -= 1;
                                     } else {
@@ -359,17 +445,20 @@ Backward
                                         if (ry > minEnd) {
                                             for (let i= 0; i<redX.length; i++){
                                                 if (Math.abs(redX[i]-rx)<10) {
-                                                    redBlock = true;
-                                                }
-                                            }
-                                            if (redBlock) {
-                                                redBlock = false;
-                                                for (let i= 0; i<redY.length; i++){
-                                                    if (Math.abs(redY[i]-ry)<80) {
+                                                    if (Math.abs(redY[i]-ry)<68) {
                                                         redBlock = true;
                                                     }
+                                                    {#redBlock = true;#}
                                                 }
                                             }
+                                            {#if (redBlock) {#}
+                                            {#    redBlock = false;#}
+                                            {#    for (let i= 0; i<redY.length; i++){#}
+                                            {#        if (Math.abs(redY[i]-ry)<80) {#}
+                                            {#            redBlock = true;#}
+                                            {#        }#}
+                                            {#    }#}
+                                            {# }#}
                                             if (redBlock === false) {
                                                 ry -= 1;
                                             } else {
@@ -389,17 +478,20 @@ Backward
                             if (rx < maxEnd) {
                                 for (let i= 0; i<redY.length; i++){
                                             if (Math.abs(redY[i]-ry)<10) {
-                                                redBlock = true;
-                                            }
-                                        }
-                                        if (redBlock) {
-                                            redBlock = false;
-                                            for (let i= 0; i<redX.length; i++){
-                                                if (Math.abs(redX[i]-rx)<80) {
+                                                if (Math.abs(redX[i]-rx)<68) {
                                                     redBlock = true;
                                                 }
+                                                {#redBlock = true;#}
                                             }
                                         }
+                                        {#if (redBlock) {#}
+                                        {#    redBlock = false;#}
+                                        {#    for (let i= 0; i<redX.length; i++){#}
+                                        {#        if (Math.abs(redX[i]-rx)<80) {#}
+                                        {#            redBlock = true;#}
+                                        {#        }#}
+                                        {#    }#}
+                                        {# }#}
                                 if (redBlock === false) {
                                     rx += 1;
                                 } else {
@@ -416,17 +508,20 @@ Backward
                                     if (ry < maxEnd) {
                                         for (let i= 0; i<redX.length; i++){
                                             if (Math.abs(redX[i]-rx)<10) {
-                                                redBlock = true;
-                                            }
-                                        }
-                                        if (redBlock) {
-                                            redBlock = false;
-                                            for (let i= 0; i<redY.length; i++){
-                                                if (Math.abs(redY[i]-ry)<80) {
+                                                if (Math.abs(redY[i]-ry)<68) {
                                                     redBlock = true;
                                                 }
+                                                {#redBlock = true;#}
                                             }
                                         }
+                                        {#if (redBlock) {#}
+                                        {#    redBlock = false;#}
+                                        {#    for (let i= 0; i<redY.length; i++){#}
+                                        {#        if (Math.abs(redY[i]-ry)<80) {#}
+                                        {#            redBlock = true;#}
+                                        {#        }#}
+                                        {#    }#}
+                                        {# }#}
                                         if (redBlock === false) {
                                             ry += 1;
                                         } else {
@@ -443,17 +538,20 @@ Backward
                                         if (rx > minEnd) {
                                             for (let i= 0; i<redY.length; i++){
                                                 if (Math.abs(redY[i]-ry)<10) {
-                                                    redBlock = true;
-                                                }
-                                            }
-                                            if (redBlock) {
-                                                redBlock = false;
-                                                for (let i= 0; i<redX.length; i++){
-                                                    if (Math.abs(redX[i]-rx)<80) {
+                                                    if (Math.abs(redX[i]-rx)<68) {
                                                         redBlock = true;
                                                     }
+                                                    {#redBlock = true;#}
                                                 }
                                             }
+                                            {#if (redBlock) {#}
+                                            {#    redBlock = false;#}
+                                            {#    for (let i= 0; i<redX.length; i++){#}
+                                            {#        if (Math.abs(redX[i]-rx)<80) {#}
+                                            {#            redBlock = true;#}
+                                            {#        }#}
+                                            {#    }#}
+                                            {# }#}
                                     if (redBlock === false) {
                                         rx -= 1;
                                     } else {
@@ -469,17 +567,20 @@ Backward
                                         if (ry > minEnd) {
                                             for (let i= 0; i<redX.length; i++){
                                                 if (Math.abs(redX[i]-rx)<10) {
-                                                    redBlock = true;
-                                                }
-                                            }
-                                            if (redBlock) {
-                                                redBlock = false;
-                                                for (let i= 0; i<redY.length; i++){
-                                                    if (Math.abs(redY[i]-ry)<80) {
+                                                    if (Math.abs(redY[i]-ry)<68) {
                                                         redBlock = true;
                                                     }
+                                                    {#redBlock = true;#}
                                                 }
                                             }
+                                            {#if (redBlock) {#}
+                                            {#    redBlock = false;#}
+                                            {#    for (let i= 0; i<redY.length; i++){#}
+                                            {#        if (Math.abs(redY[i]-ry)<80) {#}
+                                            {#            redBlock = true;#}
+                                            {#        }#}
+                                            {#    }#}
+                                            {# }#}
                                             if (redBlock === false) {
                                                 ry -= 1;
                                             } else {
