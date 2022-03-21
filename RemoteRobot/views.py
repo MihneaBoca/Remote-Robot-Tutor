@@ -40,27 +40,27 @@ def index(request):
         ;
 
         ForwardCommand:
-            'Forward' f=FLOAT
+            'Forward' f=FLOAT | 'forward' f=FLOAT | 'F' f=FLOAT | 'f' f=FLOAT
         ;
 
         BackwardCommand:
-            'Backward' b=FLOAT
+            'Backward' b=FLOAT | 'backward' b=FLOAT | 'B' b=FLOAT | 'b' b=FLOAT
         ;
 
         TurnRightCommand:
-            'TurnRight' r=FLOAT
+            'TurnRight' r=FLOAT |'turnright' r=FLOAT | 'Turn Right' r=FLOAT | 'turn right' r=FLOAT | 'Right' r=FLOAT | 'right' r=FLOAT | 'R' r=FLOAT | 'r' r=FLOAT
         ;
 
         TurnLeftCommand:
-            'TurnLeft' l=FLOAT
+            'TurnLeft' l=FLOAT |'turnleft' l=FLOAT | 'Turn Left' l=FLOAT | 'turn left' l=FLOAT | 'Left' l=FLOAT | 'left' l=FLOAT | 'L' l=FLOAT | 'l' l=FLOAT
         ;
         
         RepeatCommand:
-            'Repeat' w=INT
+            'Repeat' w=INT | 'repeat' w=INT | 'W' w=INT | 'w' w=INT
         ;
         
         EndRepeatCommand:
-            'End' e=STRING?
+            'End' e=STRING? | 'end' e=STRING? | 'E' e=STRING? | 'e' e=STRING?
         ;
         Comment:
             /\/\/.*$/
@@ -398,27 +398,27 @@ def simulator(request):
         ;
 
         ForwardCommand:
-            'Forward' f=STRING?
+            'Forward' f=STRING? | 'forward' f=STRING? | 'F' f=STRING? | 'f' f=STRING?
         ;
 
         BackwardCommand:
-            'Backward' b=STRING?
+            'Backward' b=STRING? | 'backward' b=STRING? | 'B' b=STRING? | 'b' b=STRING?
         ;
 
         TurnRightCommand:
-            'TurnRight' r=STRING?
+            'TurnRight' r=STRING? |'turnright' r=STRING? | 'Turn Right' r=STRING? | 'turn right' r=STRING? | 'Right' r=STRING? | 'right' r=STRING? | 'R' r=STRING? | 'r' r=STRING?
         ;
 
         TurnLeftCommand:
-            'TurnLeft' l=STRING?
+            'TurnLeft' l=STRING? |'turnleft' l=STRING? | 'Turn Left' l=STRING? | 'turn left' l=STRING? | 'Left' l=STRING? | 'left' l=STRING? | 'L' l=STRING? | 'l' l=STRING?
         ;
         
         RepeatCommand:
-            'Repeat' w=INT
+            'Repeat' w=INT | 'repeat' w=INT | 'W' w=INT | 'w' w=INT
         ;
         
         EndRepeatCommand:
-            'End' e=STRING?
+            'End' e=STRING? | 'end' e=STRING? | 'E' e=STRING? | 'e' e=STRING?
         ;
 
         Comment:
