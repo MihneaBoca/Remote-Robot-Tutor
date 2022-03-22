@@ -5,10 +5,79 @@ import random
 from RemoteRobot.models import Code
 from textx import metamodel_from_str
 import socket
+from collections import deque
 
 
-# initialX = 10
-# initialY = 10
+class Graph:
+    def __init__(self, adj):
+        self.adj = adj
+
+    def get_neighbors(self, v):
+        return self.adj[v]
+
+    def heuristic(self, n, adj):
+        heuristic = {}
+        for value in adj:
+            heuristic[value] = 1
+
+        return heuristic[n]
+
+    def a_star(self, start, dest, adj):
+        not_visited = set([start])
+        visited = set([])
+
+        distance = {}
+        adj_map = {}
+
+        distance[start] = 0
+        adj_map[start] = start
+
+        while len(not_visited) > 0:
+            node = None
+
+            for i in not_visited:
+                if node is None or distance[i] + self.heuristic(i, adj) < distance[node] + self.heuristic(node, adj):
+                    node = i
+            print(node)
+
+            if node is None:
+                return 'No path to destination'
+
+            if node == dest:
+                path = []
+
+                while adj_map[node] != node:
+                    path.append(node)
+                    node = adj_map[node]
+
+                path.append(start)
+
+                path.reverse()
+
+                return path
+
+            for (i, weight) in self.get_neighbors(node):
+
+                if i not in not_visited and i not in visited:
+                    not_visited.add(i)
+                    adj_map[i] = node
+                    distance[i] = distance[node] + weight
+
+                else:
+                    if distance[i] > distance[node] + weight:
+                        distance[i] = distance[node] + weight
+                        adj_map[i] = node
+
+                        if i in visited:
+                            visited.remove(i)
+                            not_visited.add(i)
+
+            not_visited.remove(node)
+            visited.add(node)
+
+        return 'No path to destination'
+
+
 
 def index(request):
     enter_code = "//Enter your code here..."
@@ -139,41 +208,40 @@ def index(request):
             message = 'The number of Repeat and End needs to be the same'
             return render(request, 'index.html',
                           {'code': code, 'password': password, 'message': message})
-        #print(result)
+        # print(result)
         if count_w != 0:
             result_list = result.splitlines()
-            #print('result_list')
-            #print(result_list)
+            # print('result_list')
+            # print(result_list)
             while count_w > 0:
-                w = len(result_list)-1
+                w = len(result_list) - 1
                 while not result_list[w].__contains__('w'):
                     w -= 1
-                #print(result_list[w])
+                # print(result_list[w])
                 e = w
                 while not result_list[e].__contains__('e'):
                     e += 1
-                #print(result_list[e])
+                # print(result_list[e])
                 repeats = int(result_list[w][2:])
-                #print(repeats)
-                commands = result_list[w+1:e]
-                #print(commands)
+                # print(repeats)
+                commands = result_list[w + 1:e]
+                # print(commands)
                 repeated_commands = []
                 while repeats > 0:
-                    #print(commands)
+                    # print(commands)
                     for i in commands:
                         repeated_commands.append(i)
                     repeats -= 1
-                result_list = result_list[:w] + repeated_commands + result_list[e+1:]
+                result_list = result_list[:w] + repeated_commands + result_list[e + 1:]
                 count_w -= 1
             result = ""
             for i in result_list:
                 result += i + '\n'
-        #print("result")
-        #print(result)
+        # print("result")
+        # print(result)
 
         # return render(request, 'index.html',
         #               {'code': code, 'password': password, 'message': message})
-
 
         HOST = '46.101.78.94'  # The server's hostname or IP address
         PORT = 8010  # The port used by the server
@@ -223,7 +291,7 @@ def simulator(request):
 
     coord = [10, 78, 146, 214, 282, 350]
 
-    #print(request.session.keys())
+    # print(request.session.keys())
 
     # del request.session['initialA']
     # del request.session['initialX']
@@ -231,7 +299,7 @@ def simulator(request):
     # del request.session['yellowX']
     # del request.session['yellowY']
 
-    #print(len(coord) - coord.index(int(10)))
+    # print(len(coord) - coord.index(int(10)))
 
     for key in request.session.keys():
         print(request.session[key])
@@ -280,72 +348,9 @@ def simulator(request):
     if 'red_y' in request.session.keys():
         red_y = request.session["red_y"]
     else:
-        red_y = []
-        for i in range(red_size):
-            repeat = True
-            while repeat:
-                repeat = False
-                new_red = coord[random.randrange(len(coord))]
-                if red_x[i] == initialX:
-                    while new_red == initialY:
-                        new_red = coord[random.randrange(len(coord))]
-                        if red_x[i] == yellowX:
-                            while new_red == yellowY:
-                                new_red = coord[random.randrange(len(coord))]
-                if red_x[i] == yellowX:
-                    while new_red == yellowY:
-                        new_red = coord[random.randrange(len(coord))]
-                        if red_x[i] == initialX:
-                            while new_red == initialY:
-                                new_red = coord[random.randrange(len(coord))]
-                for j in range(len(red_y)):
-                    if i != j:
-                        if red_x[i] == red_x[j]:
-                            if red_y[j] == new_red:
-                                repeat = True
-            red_y.append(new_red)
-        request.session["red_y"] = red_y
+        no_path = True
 
-    #print(request.session.keys())
-
-    #print(red_x)
-    #print(red_y)
-
-    #print(coord.index(int(initialX)) < len(coord) / 2)
-
-    if request.method == 'POST':
-
-        # for i in request.POST:
-        #     print(i)
-
-        if 'new_map' in request.POST:
-            red_size = int(request.POST['red_squares'])
-
-            initialX = coord[random.randrange(len(coord))]
-            request.session['initialX'] = initialX
-            # initialX = request.session["initialX"]
-
-            initialY = coord[random.randrange(len(coord))]
-            request.session['initialY'] = initialY
-            # initialY = request.session["initialY"]
-
-            if coord.index(int(initialX)) < len(coord) / 2:
-                request.session['yellowX'] = coord[len(coord) - 1]
-            else:
-                request.session['yellowX'] = coord[0]
-            yellowX = request.session["yellowX"]
-
-            if coord.index(int(initialY)) < len(coord) / 2:
-                request.session['yellowY'] = coord[len(coord) - 1]
-            else:
-                request.session['yellowY'] = coord[0]
-            yellowY = request.session["yellowY"]
-
-            red_x = []
-            for i in range(red_size):
-                red_x.append(coord[random.randrange(len(coord))])
-            request.session["red_x"] = red_x
-
+        while no_path:
             red_y = []
             for i in range(red_size):
                 repeat = True
@@ -372,6 +377,128 @@ def simulator(request):
                 red_y.append(new_red)
             request.session["red_y"] = red_y
 
+            nodes = []
+
+            for i in range(len(coord)):
+                for j in range(len(coord)):
+                    nodes.append((i, j))
+
+            for i in range(len(red_x)):
+                print((coord.index(red_x[i]), coord.index(red_y[i])))
+                nodes.remove((coord.index(red_x[i]), coord.index(red_y[i])))
+
+            start = (coord.index(initialX), coord.index(initialY))
+            dest = (coord.index(yellowX), coord.index(yellowY))
+
+            adj_list = {}
+            for i in range(6):
+                for j in range(6):
+                    if (i, j) in nodes:
+                        neighbours = []
+                        if (i + 1, j) in nodes:
+                            neighbours.append(((i + 1, j), 1))
+                        if (i, j + 1) in nodes:
+                            neighbours.append(((i, j + 1), 1))
+                        adj_list[(i, j)] = neighbours
+
+            graph = Graph(adj_list)
+            output = graph.a_star(start, dest, nodes)
+            if str(output) != 'No path to destination':
+                no_path = False
+
+    if request.method == 'POST':
+
+        if 'new_map' in request.POST:
+            red_size = int(request.POST['red_squares'])
+
+            initialX = coord[random.randrange(len(coord))]
+            request.session['initialX'] = initialX
+            # initialX = request.session["initialX"]
+
+            initialY = coord[random.randrange(len(coord))]
+            request.session['initialY'] = initialY
+            # initialY = request.session["initialY"]
+
+            if coord.index(int(initialX)) < len(coord) / 2:
+                request.session['yellowX'] = coord[len(coord) - 1]
+            else:
+                request.session['yellowX'] = coord[0]
+            yellowX = request.session["yellowX"]
+
+            if coord.index(int(initialY)) < len(coord) / 2:
+                request.session['yellowY'] = coord[len(coord) - 1]
+            else:
+                request.session['yellowY'] = coord[0]
+            yellowY = request.session["yellowY"]
+
+            no_path = True
+
+            while no_path:
+
+                red_x = []
+                for i in range(red_size):
+                    red_x.append(coord[random.randrange(len(coord))])
+                request.session["red_x"] = red_x
+
+                red_y = []
+                for i in range(red_size):
+                    repeat = True
+                    while repeat:
+                        repeat = False
+                        new_red = coord[random.randrange(len(coord))]
+                        if red_x[i] == initialX:
+                            while new_red == initialY:
+                                new_red = coord[random.randrange(len(coord))]
+                                if red_x[i] == yellowX:
+                                    while new_red == yellowY:
+                                        new_red = coord[random.randrange(len(coord))]
+                        if red_x[i] == yellowX:
+                            while new_red == yellowY:
+                                new_red = coord[random.randrange(len(coord))]
+                                if red_x[i] == initialX:
+                                    while new_red == initialY:
+                                        new_red = coord[random.randrange(len(coord))]
+                        for j in range(len(red_y)):
+                            if i != j:
+                                if red_x[i] == red_x[j]:
+                                    if red_y[j] == new_red:
+                                        repeat = True
+                    red_y.append(new_red)
+                request.session["red_y"] = red_y
+
+                nodes = []
+
+                for i in range(len(coord)):
+                    for j in range(len(coord)):
+                        nodes.append((i, j))
+
+                for i in range(len(red_x)):
+                    print((coord.index(red_x[i]), coord.index(red_y[i])))
+                    nodes.remove((coord.index(red_x[i]), coord.index(red_y[i])))
+
+                start = (coord.index(initialX), coord.index(initialY))
+                dest = (coord.index(yellowX), coord.index(yellowY))
+
+                adj_list = {}
+                for i in range(6):
+                    for j in range(6):
+                        if (i, j) in nodes:
+                            neighbours = []
+                            if (i + 1, j) in nodes:
+                                neighbours.append(((i + 1, j), 1))
+                            if (i, j + 1) in nodes:
+                                neighbours.append(((i, j + 1), 1))
+                            if (i - 1, j) in nodes:
+                                neighbours.append(((i - 1, j), 1))
+                            if (i, j - 1) in nodes:
+                                neighbours.append(((i, j - 1), 1))
+                            adj_list[(i, j)] = neighbours
+
+                graph = Graph(adj_list)
+                output = graph.a_star(start, dest, nodes)
+                if str(output) != 'No path to destination':
+                    no_path = False
+
             return render(request, 'simulator.html',
                           {'enter_code': enter_code, 'output_terminal': output_terminal, 'result': result,
                            'initialX': initialX, 'initialY': initialY, 'yellowX': yellowX, 'yellowY': yellowY,
@@ -380,12 +507,6 @@ def simulator(request):
         code = request.POST['terminal']
         print(code)
         message = 'Done.'
-
-        # initialX = request.session['initialX']
-        # if initialX is None:
-        #     request.session['initialX'] = random.randrange(len(coord))
-        # initialX = request.session['initialX']
-        # print(initialX)
 
         grammar = '''
 
@@ -499,29 +620,29 @@ def simulator(request):
                            'yellowX': yellowX, 'yellowY': yellowY, 'red_x': red_x, 'red_y': red_y,
                            'red_size': red_size})
 
-        #print(count_w)
+        # print(count_w)
         while count_w != 0:
             w = result.rfind('w')
             e = w
             while result[e] != 'e':
                 e += 1
             number = ''
-            i = w+1
-            #print(result[i])
+            i = w + 1
+            # print(result[i])
             while result[i].isdigit():
                 number += result[i]
                 i += 1
-            #print(number)
+            # print(number)
             commands = result[i:e]
-            #print(commands)
+            # print(commands)
             repeats = int(number)
             repeated_commands = ""
             while repeats > 0:
-                #print(commands)
+                # print(commands)
                 repeated_commands += commands
                 repeats -= 1
-            #print(commands)
-            result = result[:w] + repeated_commands + result[e+1:]
+            # print(commands)
+            result = result[:w] + repeated_commands + result[e + 1:]
             count_w -= 1
 
         return render(request, 'simulator.html',
