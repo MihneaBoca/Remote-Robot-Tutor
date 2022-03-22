@@ -20,5 +20,6 @@ from RemoteRobot import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('simulator/', views.simulator, name='simulator'),
+    path('short/', views.short, name='short'),
     path('admin/', admin.site.urls),
 ]
