@@ -224,6 +224,9 @@ def index(request):
             for i in result_list:
                 result += i + '\n'
 
+        if 'undo' in request.POST:
+            result = 'undo'
+
         HOST = '46.101.78.94'  # The server's hostname or IP address
         PORT = 8010  # The port used by the server
 
