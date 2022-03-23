@@ -39,6 +39,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 sleep(6)
                 data = s.recv(1024)
 
+                if data.decode("utf-8") == 'disconnect':
+                    check = False
+                    s.close()
+                    exit()
+
                 if data.decode("utf-8") == 'undo':
                     if command_stack:
                         undo = command_stack[-1]

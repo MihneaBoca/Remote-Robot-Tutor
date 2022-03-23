@@ -51,19 +51,19 @@ def new_robot(conn, addr, robot):
 
 def website(conn, robot):
     robot_code = status.decode("utf-8").splitlines()[1]
-    # print(robot_code)
     while robot_lock.locked():
         pass
     robot_lock.acquire()
     if robot_code in robot:
         try:
-            # print(robot[robot_code])
             robot[robot_code][0].recv(1204)
             robot[robot_code][0].sendall(str.encode("Connected to website"))
             conn.sendall(str.encode("Connected to robot"))
             result = conn.recv(1204)
-            # print(result.decode("utf-8"))
             robot[robot_code][0].sendall(result)
+            if result.decode("utf-8") == 'disconnect':
+                del robot[robot_code]
+
         except:
             pass
 

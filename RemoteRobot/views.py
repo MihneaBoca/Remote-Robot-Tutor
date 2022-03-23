@@ -227,6 +227,9 @@ def index(request):
         if 'undo' in request.POST:
             result = 'undo'
 
+        if 'disconnect' in request.POST:
+            result = 'disconnect'
+
         HOST = '46.101.78.94'  # The server's hostname or IP address
         PORT = 8010  # The port used by the server
 
@@ -256,6 +259,8 @@ def index(request):
                 return render(request, 'index.html',
                               {'code': code, 'password': password, 'message': message})
             s.close()
+            if result == 'disconnect':
+                message += '\nRobot was disconnected'
             return render(request, 'index.html',
                           {'code': code, 'password': password, 'message': message})
 
