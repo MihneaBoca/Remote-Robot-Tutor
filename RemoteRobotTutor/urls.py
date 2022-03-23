@@ -21,5 +21,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('simulator/', views.simulator, name='simulator'),
     path('short/', views.short, name='short'),
+    path('traverse/', views.traverse, name='traverse'),
     path('admin/', admin.site.urls),
 ]
