@@ -85,7 +85,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                                 commands.append('l' + i[1:])
                             elif i[0] == 'l':
                                 mdiff.turn_left(SpeedRPM(40), float(i[2:]))
-                                commands.append('l' + i[1:])
+                                commands.append('r' + i[1:])
                         commands.reverse()
                         command_stack.append(commands)
                     except:
