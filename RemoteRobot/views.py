@@ -114,15 +114,15 @@ def index(request):
         ;
 
         TurnRightCommand:
-            'TurnRight' r=FLOAT |'turnright' r=FLOAT | 'Turn Right' r=FLOAT | 'turn right' r=FLOAT | 'Right' r=FLOAT | 'right' r=FLOAT | 'R' r=FLOAT | 'r' r=FLOAT
+            'TurnRight' r=FLOAT |'turnright' r=FLOAT | 'Turn Right' r=FLOAT | 'turn right' r=FLOAT | 'Right' r=FLOAT | 'right' r=FLOAT | 'r' r=FLOAT
         ;
 
         TurnLeftCommand:
-            'TurnLeft' l=FLOAT |'turnleft' l=FLOAT | 'Turn Left' l=FLOAT | 'turn left' l=FLOAT | 'Left' l=FLOAT | 'left' l=FLOAT | 'L' l=FLOAT | 'l' l=FLOAT
+            'TurnLeft' l=FLOAT |'turnleft' l=FLOAT | 'Turn Left' l=FLOAT | 'turn left' l=FLOAT | 'Left' l=FLOAT | 'left' l=FLOAT | 'l' l=FLOAT
         ;
         
         RepeatCommand:
-            'Repeat' w=INT | 'repeat' w=INT | 'W' w=INT | 'w' w=INT
+            'Repeat' w=INT | 'W' w=INT | 'w' w=INT
         ;
         
         EndRepeatCommand:
@@ -499,15 +499,15 @@ def simulator(request):
         ;
 
         TurnRightCommand:
-            'TurnRight' r=STRING? |'turnright' r=STRING? | 'Turn Right' r=STRING? | 'turn right' r=STRING? | 'Right' r=STRING? | 'right' r=STRING? | 'R' r=STRING? | 'r' r=STRING?
+            'TurnRight' r=STRING? |'turnright' r=STRING? | 'Turn Right' r=STRING? | 'turn right' r=STRING? | 'Right' r=STRING? | 'right' r=STRING? | 'r' r=STRING?
         ;
 
         TurnLeftCommand:
-            'TurnLeft' l=STRING? |'turnleft' l=STRING? | 'Turn Left' l=STRING? | 'turn left' l=STRING? | 'Left' l=STRING? | 'left' l=STRING? | 'L' l=STRING? | 'l' l=STRING?
+            'TurnLeft' l=STRING? |'turnleft' l=STRING? | 'Turn Left' l=STRING? | 'turn left' l=STRING? | 'Left' l=STRING? | 'left' l=STRING? | 'l' l=STRING?
         ;
         
         RepeatCommand:
-            'Repeat' w=INT | 'repeat' w=INT | 'W' w=INT | 'w' w=INT
+            'Repeat ' w=INT | 'W' w=INT | 'w' w=INT
         ;
         
         EndRepeatCommand:
@@ -854,15 +854,15 @@ def short(request):
         ;
 
         TurnRightCommand:
-            'TurnRight' r=STRING? |'turnright' r=STRING? | 'Turn Right' r=STRING? | 'turn right' r=STRING? | 'Right' r=STRING? | 'right' r=STRING? | 'R' r=STRING? | 'r' r=STRING?
+            'TurnRight' r=STRING? |'turnright' r=STRING? | 'Turn Right' r=STRING? | 'turn right' r=STRING? | 'Right' r=STRING? | 'right' r=STRING? | 'r' r=STRING?
         ;
 
         TurnLeftCommand:
-            'TurnLeft' l=STRING? |'turnleft' l=STRING? | 'Turn Left' l=STRING? | 'turn left' l=STRING? | 'Left' l=STRING? | 'left' l=STRING? | 'L' l=STRING? | 'l' l=STRING?
+            'TurnLeft' l=STRING? |'turnleft' l=STRING? | 'Turn Left' l=STRING? | 'turn left' l=STRING? | 'Left' l=STRING? | 'left' l=STRING? | 'l' l=STRING?
         ;
 
         RepeatCommand:
-            'Repeat' w=INT | 'repeat' w=INT | 'W' w=INT | 'w' w=INT
+            'Repeat' w=INT | 'W' w=INT | 'w' w=INT
         ;
 
         EndRepeatCommand:
@@ -1192,15 +1192,15 @@ def traverse(request):
         ;
 
         TurnRightCommand:
-            'TurnRight' r=STRING? |'turnright' r=STRING? | 'Turn Right' r=STRING? | 'turn right' r=STRING? | 'Right' r=STRING? | 'right' r=STRING? | 'R' r=STRING? | 'r' r=STRING?
+            'TurnRight' r=STRING? |'turnright' r=STRING? | 'Turn Right' r=STRING? | 'turn right' r=STRING? | 'Right' r=STRING? | 'right' r=STRING? | 'r' r=STRING?
         ;
 
         TurnLeftCommand:
-            'TurnLeft' l=STRING? |'turnleft' l=STRING? | 'Turn Left' l=STRING? | 'turn left' l=STRING? | 'Left' l=STRING? | 'left' l=STRING? | 'L' l=STRING? | 'l' l=STRING?
+            'TurnLeft' l=STRING? |'turnleft' l=STRING? | 'Turn Left' l=STRING? | 'turn left' l=STRING? | 'Left' l=STRING? | 'left' l=STRING? | 'l' l=STRING?
         ;
 
         RepeatCommand:
-            'Repeat' w=INT | 'repeat' w=INT | 'W' w=INT | 'w' w=INT
+            'Repeat' w=INT | 'W' w=INT | 'w' w=INT
         ;
 
         EndRepeatCommand:

@@ -34,7 +34,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             data = s.recv(1024)
             if data.decode("utf-8").__contains__('Connected to website'):
                 lcd = ev3.Screen()
-                lcd.draw.text((25, 50), data.decode("utf-8"), font=fonts.load('luBS12'))
+                lcd.draw.text((25, 50), 'Connected to website', font=fonts.load('luBS12'))
                 lcd.update()
                 sleep(6)
                 data = s.recv(1024)
