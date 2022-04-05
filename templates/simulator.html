@@ -38,7 +38,7 @@
                     <div class="row" style="margin-left: 15px">
                     <div class="card" style="width: 20rem; align-self: center" >
                         <div class="card-body">
-                            <a href="{% url 'short' %} "style="color: #222222">
+                            <a href="{% url 'short' %} "style="color: #222222" id="short">
                                 <p style="font-family:courier; font-size: 20px; text-align: center;"><b>Shortest Path</b></p>
                                 <p style="font-family:courier; font-size: 15px; text-align: center;">Find the shortest path to the destination.</p>
                     </a>
@@ -46,7 +46,7 @@
                     </div>
                      <div class="card" style="width: 20rem; align-self: center; margin-left: 5px" >
                         <div class="card-body">
-                            <a href="{% url 'traverse' %} "style="color: #222222">
+                            <a href="{% url 'traverse' %} "style="color: #222222" id="traverse">
                                 <p style="font-family:courier; font-size: 20px; text-align: center;"><b>Traverse the map</b></p>
                                 <p style="font-family:courier; font-size: 15px; text-align: center;">Traverse the entire map going through every green square.</p>
                     </a>
@@ -242,7 +242,7 @@ End</textarea>
                         for (let j = 10; j < 391; j += 68) {
                             ctx.beginPath();
                             ctx.rect(i, j, 50, 50);
-                            ctx.fillStyle = "#2DB46E";{#"#FF0000";#}
+                            ctx.fillStyle = "#2DB46E";
                             ctx.fill();
                             ctx.globalCompositeOperation = 'source-over';
                             ctx.closePath();
@@ -330,7 +330,6 @@ End</textarea>
                                                 if (Math.abs(redY[i]-ry)<68) {
                                                     redBlock = true;
                                                 }
-                                                {#redBlock = true;#}
                                             }
                                         }
 
@@ -494,7 +493,6 @@ End</textarea>
 
                 function turnRight() {
                     requestAnimationFrame(move);
-                    {#getUnitTime(2000);#}
                     if (wait === true) {
                         if (direction === "east") {
                                 r.src = "{% static "robot-south.png" %}";
@@ -520,7 +518,6 @@ End</textarea>
 
                 function turnLeft() {
                     requestAnimationFrame(move);
-                    {#getUnitTime(2000);#}
                     if (wait === true) {
                         if (direction === "east") {
                                 r.src = "{% static "robot-north.png" %}";

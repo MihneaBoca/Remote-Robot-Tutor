@@ -74,9 +74,6 @@ def website(conn, robot):
 
 PORT = 8010
 
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.connect(("remoterobottutor-tp7vf.ondigitalocean.app", 80))
-s.close()
 robot = {}
 robot_lock = threading.Lock()
 

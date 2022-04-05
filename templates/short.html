@@ -228,7 +228,7 @@ End</textarea>
                         for (let j = 10; j < 391; j += 68) {
                             ctx.beginPath();
                             ctx.rect(i, j, 50, 50);
-                            ctx.fillStyle = "#2DB46E";{#"#FF0000";#}
+                            ctx.fillStyle = "#2DB46E";
                             ctx.fill();
                             ctx.globalCompositeOperation = 'source-over';
                             ctx.closePath();
@@ -412,7 +412,6 @@ End</textarea>
                                                 if (Math.abs(redY[i]-ry)<68) {
                                                     redBlock = true;
                                                 }
-                                                {#redBlock = true;#}
                                             }
                                         }
 
@@ -483,7 +482,6 @@ End</textarea>
 
                 function turnRight() {
                     requestAnimationFrame(move);
-                    {#getUnitTime(2000);#}
                     if (wait === true) {
                         if (direction === "east") {
                                 r.src = "{% static "robot-south.png" %}";
@@ -509,7 +507,6 @@ End</textarea>
 
                 function turnLeft() {
                     requestAnimationFrame(move);
-                    {#getUnitTime(2000);#}
                     if (wait === true) {
                         if (direction === "east") {
                                 r.src = "{% static "robot-north.png" %}";
@@ -581,8 +578,6 @@ End</textarea>
                                 increment = 1;
                                 console.log('for')
                                 forward();
-                                {#console.log(rx,ry)#}
-                                {#if (increment === 70) {increment = 1}#}
 
 
                             }
@@ -599,8 +594,6 @@ End</textarea>
                                 increment = 1;
                                 console.log('back');
                                 forward();
-                                {#backward();#}
-                                {#if (increment === 70) {increment = 1}#}
 
 
                             }

@@ -145,31 +145,21 @@ def index(request):
 
             def interpret(self, model):
 
-                # initialise string
                 result = ''
 
-                # model is an instance of program
                 for c in model.commands:
 
                     if c.__class__.__name__ == "ForwardCommand":
                         result += 'f ' + str(float(c.f)) + '\n'
-                        # result += "my_vehicle.drive_straight(" + str(0.2*float(c.f)) + ")" + "\n"#"Forward " + str(c.f)
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "BackwardCommand":
                         result += 'b ' + str(float(c.b)) + '\n'
-                        # result += "my_vehicle.drive_straight(" + str(-0.2*float(c.b)) + ")" + "\n"
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "TurnRightCommand":
                         result += 'r ' + str(float(c.r)) + '\n'
-                        # result += "my_vehicle.drive_turn(" + str(float(c.r)) + ", 0.0)\n"
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "TurnLeftCommand":
                         result += 'l ' + str(float(c.l)) + '\n'
-                        # result += "my_vehicle.drive_turn(" + str(-float(c.l)) + ", 0.0)\n"
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "RepeatCommand":
                         result += 'w ' + str(int(c.w)) + '\n'
@@ -291,7 +281,6 @@ def simulator(request):
         yellowX = request.session["yellowX"]
     else:
         if coord.index(int(initialX)) < len(coord) / 2:
-            # request.session['yellowX'] = coord[len(coord)-coord.index(int(initialX))-1]
             request.session['yellowX'] = coord[len(coord) - 1]
         else:
             request.session['yellowX'] = coord[0]
@@ -300,8 +289,6 @@ def simulator(request):
     if 'yellowY' in request.session.keys():
         yellowY = request.session["yellowY"]
     else:
-        # request.session['yellowY'] = coord[len(coord)-coord.index(int(initialY))-1]
-        # yellowY = request.session["yellowY"]
         if coord.index(int(initialY)) < len(coord) / 2:
             request.session['yellowY'] = coord[len(coord) - 1]
         else:
@@ -387,11 +374,9 @@ def simulator(request):
 
             initialX = coord[random.randrange(len(coord))]
             request.session['initialX'] = initialX
-            # initialX = request.session["initialX"]
 
             initialY = coord[random.randrange(len(coord))]
             request.session['initialY'] = initialY
-            # initialY = request.session["initialY"]
 
             if coord.index(int(initialX)) < len(coord) / 2:
                 request.session['yellowX'] = coord[len(coord) - 1]
@@ -533,31 +518,21 @@ def simulator(request):
 
             def interpret(self, model):
 
-                # initialise string
                 result = ''
 
-                # model is an instance of program
                 for c in model.commands:
 
                     if c.__class__.__name__ == "ForwardCommand":
                         result += 'f'
-                        # result += "my_vehicle.drive_straight(" + str(0.2*float(c.f)) + ")" + "\n"#"Forward " + str(c.f)
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "BackwardCommand":
                         result += 'b'
-                        # result += "my_vehicle.drive_straight(" + str(-0.2*float(c.b)) + ")" + "\n"
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "TurnRightCommand":
                         result += 'r'
-                        # result += "my_vehicle.drive_turn(" + str(float(c.r)) + ", 0.0)\n"
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "TurnLeftCommand":
                         result += 'l'
-                        # result += "my_vehicle.drive_turn(" + str(-float(c.l)) + ", 0.0)\n"
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "RepeatCommand":
                         result += 'w' + str(int(c.w))
@@ -645,7 +620,6 @@ def short(request):
         yellowX = request.session["yellowX"]
     else:
         if coord.index(int(initialX)) < len(coord) / 2:
-            # request.session['yellowX'] = coord[len(coord)-coord.index(int(initialX))-1]
             request.session['yellowX'] = coord[len(coord) - 1]
         else:
             request.session['yellowX'] = coord[0]
@@ -654,8 +628,6 @@ def short(request):
     if 'yellowY' in request.session.keys():
         yellowY = request.session["yellowY"]
     else:
-        # request.session['yellowY'] = coord[len(coord)-coord.index(int(initialY))-1]
-        # yellowY = request.session["yellowY"]
         if coord.index(int(initialY)) < len(coord) / 2:
             request.session['yellowY'] = coord[len(coord) - 1]
         else:
@@ -741,11 +713,9 @@ def short(request):
 
             initialX = coord[random.randrange(len(coord))]
             request.session['initialX'] = initialX
-            # initialX = request.session["initialX"]
 
             initialY = coord[random.randrange(len(coord))]
             request.session['initialY'] = initialY
-            # initialY = request.session["initialY"]
 
             if coord.index(int(initialX)) < len(coord) / 2:
                 request.session['yellowX'] = coord[len(coord) - 1]
@@ -888,31 +858,21 @@ def short(request):
 
             def interpret(self, model):
 
-                # initialise string
                 result = ''
 
-                # model is an instance of program
                 for c in model.commands:
 
                     if c.__class__.__name__ == "ForwardCommand":
                         result += 'f'
-                        # result += "my_vehicle.drive_straight(" + str(0.2*float(c.f)) + ")" + "\n"#"Forward " + str(c.f)
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "BackwardCommand":
                         result += 'b'
-                        # result += "my_vehicle.drive_straight(" + str(-0.2*float(c.b)) + ")" + "\n"
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "TurnRightCommand":
                         result += 'r'
-                        # result += "my_vehicle.drive_turn(" + str(float(c.r)) + ", 0.0)\n"
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "TurnLeftCommand":
                         result += 'l'
-                        # result += "my_vehicle.drive_turn(" + str(-float(c.l)) + ", 0.0)\n"
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "RepeatCommand":
                         result += 'w' + str(int(c.w))
@@ -1101,7 +1061,6 @@ def traverse(request):
 
             initialX = coord[random.randrange(len(coord))]
             request.session['initialX'] = initialX
-            # initialX = request.session["initialX"]
 
             initialY = coord[random.randrange(len(coord))]
             request.session['initialY'] = initialY
@@ -1225,31 +1184,21 @@ def traverse(request):
 
             def interpret(self, model):
 
-                # initialise string
                 result = ''
 
-                # model is an instance of program
                 for c in model.commands:
 
                     if c.__class__.__name__ == "ForwardCommand":
                         result += 'f'
-                        # result += "my_vehicle.drive_straight(" + str(0.2*float(c.f)) + ")" + "\n"#"Forward " + str(c.f)
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "BackwardCommand":
                         result += 'b'
-                        # result += "my_vehicle.drive_straight(" + str(-0.2*float(c.b)) + ")" + "\n"
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "TurnRightCommand":
                         result += 'r'
-                        # result += "my_vehicle.drive_turn(" + str(float(c.r)) + ", 0.0)\n"
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "TurnLeftCommand":
                         result += 'l'
-                        # result += "my_vehicle.drive_turn(" + str(-float(c.l)) + ", 0.0)\n"
-                        # resultStr = resultStr + result + "\n"
 
                     elif c.__class__.__name__ == "RepeatCommand":
                         result += 'w' + str(int(c.w))
