@@ -172,9 +172,6 @@ End</textarea>
                 let wait = false;
                 let queue = [];
 
-                console.log("{{ initialX }}")
-                console.log("{{ initialY }}")
-
                 coord = [10, 78, 146, 214, 282, 350];
 
                 let initialX = parseInt("{{ initialX }}");
@@ -227,8 +224,6 @@ End</textarea>
                   terminal.innerText = "";
                   terminal.innerHTML = "";
 
-                  console.log("reset map")
-
                 }
 
 
@@ -270,10 +265,6 @@ End</textarea>
                 let direction = "east";
                 let increment = 1;
 
-                if (code === "") {
-                    console.log("here");
-                }
-
 
                 function delay(time) {
                   return new Promise(resolve => setTimeout(resolve, time));
@@ -294,13 +285,8 @@ End</textarea>
                     if (front === true) {
                         if (direction === "east") {
                         if (increment < 70) {
-                            console.log(increment);
-                            console.log(rx, ry);
                             if (rx < maxEnd) {
-                                console.log(rx);
-                                console.log(redY)
                                 for (let i= 0; i<redY.length; i++){
-                                            console.log(redY[i])
                                             if (Math.abs(redY[i]-ry)<10) {
 
                                                 if (Math.abs(redX[i]-rx)<68) {
@@ -310,7 +296,6 @@ End</textarea>
                                             }
                                         }
 
-                                        console.log(redBlock);
                                 if (redBlock === false) {
                                     rx += 1;
                                 } else {
@@ -545,16 +530,14 @@ End</textarea>
                 }
 
                 if (code === "") {
-                    console.log("here");
+                    console.log("");
                 } else {
-                    console.log(code)
                     for (let i = 0; i < code.length; i++) {
                         if (code.charAt(i) === 'f' || code.charAt(i) === 'r' || code.charAt(i) === 'l' || code.charAt(i) === 'b') {
                             queue.push(code.charAt(i))
                         }
 
                     }
-                    console.log(queue)
                 }
 
                 let front = true;
@@ -591,7 +574,6 @@ End</textarea>
                             if (e === 'f') {
                                 front = true;
                                 increment = 1;
-                                console.log('for')
                                 forward();
 
                             }
@@ -606,7 +588,6 @@ End</textarea>
                             if (e === 'b') {
                                 front = false;
                                 increment = 1;
-                                console.log('back');
                                 forward();
 
 
@@ -632,8 +613,6 @@ End</textarea>
                                         fullMapY.push(visitedY[i]);
                                     }
                                 }
-                                console.log(fullMapX);
-                                console.log(fullMapY);
                                 let fullMap = true;
                                 for (let i = 0; i < coord.length; i++) {
                                     let countX = 0;
